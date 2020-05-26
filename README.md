@@ -1,2 +1,3 @@
-# core.coddle
-Indulge your app with coddle; a component model
+# @ne1410s/codl
+Indulge your apps with codl: a component model library
+
