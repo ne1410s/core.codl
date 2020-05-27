@@ -1,1 +1,3 @@
-export * from './decorator/base';
+export * from './decorator/behaviour';
+
+export * from './examples';
