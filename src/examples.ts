@@ -1,12 +1,11 @@
-import { BehaviorDecorators } from './decorator/behaviour'
+import { log, logme } from './decorator/behaviour';
 
-/** A sealed memo. */
-@BehaviorDecorators.Sealed
-export class SealedMemo {
+@log
+export class LogDemo {
   constructor(public greeting: string) { }
 }
 
-/** A memo. */
-export class Memo {
+@logme
+export class LogMeDemo {
   constructor(public greeting: string) { }
 }

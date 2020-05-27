@@ -1,18 +1,11 @@
 const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.cjs.min');
 
-describe('behaviour.sealed', () => {
+describe('behaviour.log', () => {
   
-  it('prevents adding new properties', () => {
-    var y = new ne_codl.SealedMemo();
-    y['chapstick'] = 222;
-    expect(y.chapstick).to.be.undefined;
-  });
-
-  it('default prevails if not used', () => {
-    var y = new ne_codl.Memo();
-    y['chapstick'] = 222;
-    expect(y.chapstick).to.not.be.undefined;
+  it('test 1', () => {
+    new ne_codl.LogDemo();
+    new ne_codl.LogMeDemo();
   });
 
 });

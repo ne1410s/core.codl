@@ -1,7 +1,11 @@
-export abstract class BehaviorDecorators {
+import { ClassDecorator, ClassDecoratorAdvanced, Instantiable } from "./types";
 
-  static Sealed: ClassDecorator = ctor => {
-    Object.seal(ctor);
-    Object.seal(ctor.prototype);
-  }
-}
+/** Class decorator that pointlessly logs the ctor. */
+export const log: ClassDecorator = ctor => {
+  console.log(ctor);
+};
+
+/** Some other sh1t. */
+export const logme = (ctor: any) => {
+  console.log(ctor);
+};
