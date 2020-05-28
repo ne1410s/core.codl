@@ -5,7 +5,7 @@ describe('behaviour.log', () => {
   
   it('test 1', () => {
     new ne_codl.LogDemo();
-    new ne_codl.LogMeDemo();
+    new ne_codl.LogDemo('hiya');
   });
 
 });
