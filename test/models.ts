@@ -1,4 +1,4 @@
-import { log } from './custom';
+import { log } from './src/custom';
 
 @log
 export class Greeter {
