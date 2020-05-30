@@ -10,6 +10,13 @@ describe('Instance Decorators', () => {
     expect(sut.greeting).to.equal(greeting);
   });
 
+  it('Permits modification of new instance', () => {
+    const greeting = 'hello, world';
+    const sut = new ne_codl.GreeterMod(greeting);
+    expect(sut instanceof ne_codl.GreeterMod).to.be.true;
+    expect(sut.greeting).to.not.equal(greeting);
+  });
+
 });
 
 // TODO: Improve types.ts (and general src structure!)

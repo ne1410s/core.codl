@@ -1,6 +1,11 @@
-import { log } from './src/custom';
+import { created } from '../src/index';
 
-@log
+@created(c => console.log(c))
 export class Greeter {
   constructor(public greeting: string) { }
+}
+
+@created((c: GreeterMod) => c.greeting = 'subverted!')
+export class GreeterMod {
+  constructor(public greeting: string) {}
 }
