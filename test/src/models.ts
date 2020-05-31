@@ -1,4 +1,4 @@
-import { created } from '../src/index';
+import { created } from '../../src/index';
 
 @created(c => console.log(c))
 export class Greeter {
