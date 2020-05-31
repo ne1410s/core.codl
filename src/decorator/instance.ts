@@ -1,4 +1,4 @@
-import { Instantiable } from "./types";
+import { Instantiable } from './types';
 
 /** Exposes newly-constructed instances. */
 export const expose = <T>(ctor: Instantiable<T>, cb: (item: T) => void): Instantiable<T> => {
