@@ -1,11 +1,19 @@
 import { FunctionDecorator } from './types';
 
-export const subvert = <T>(value: T): FunctionDecorator => {
-  
-  // can we obtain the initial return value?
-  // hmm. yes.. but only if we can get at the params
+/** Intercepts input and returns a different value. */
+export const input = (fn: (args: any[], that: any) => any): FunctionDecorator => {
   return (trg, key, desc) => {
-    desc.value = () => value;
-    return desc;
+    desc.value = (...args: any[]) => fn(args, trg);
+  }
+}
+
+/** Intercepts output and returns a different value. */
+export const output = <T>(fn: (val: T, args: any[], that: any) => T): FunctionDecorator => { 
+  return (trg, key, desc) => {
+    const origFn = desc.value;
+    desc.value = (...args: any[]) => {
+      const origVal = origFn.apply(trg, args);
+      return fn(origVal, args, trg);
+    };
   }
 }

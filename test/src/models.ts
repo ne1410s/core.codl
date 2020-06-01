@@ -1,16 +1,16 @@
-import { created, subvert } from '../../src/index';
+import { init, input, output } from '../../src/index';
 
-@created(c => console.log(c))
-export class Greeter {
-  constructor(public greeting: string) { }
+@init((c: TestDeclarations) => c.initStr = 'boo')
+export class TestDeclarations {
+  constructor(public initStr: string) { }
 
-  @subvert('subverted!')
-  public makeGreeting(override: string): string {
-    return 'hey, ' + (override || this.greeting);
+  @input(args => args.length + ' arg(s)')
+  public testFuncInput(newStr: string): string {
+    return 'hey, ' + (newStr || this.initStr);
   }
-}
 
-@created((c: GreeterMod) => c.greeting = 'subverted!')
-export class GreeterMod {
-  constructor(public greeting: string) {}
+  @output((val, args) => 'YO: ' + val)
+  public testFuncOutput(newStr: string): string {
+    return 'hey, ' + (newStr || this.initStr);
+  }
 }

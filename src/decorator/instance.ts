@@ -16,4 +16,4 @@ export const expose = <T>(ctor: Instantiable<T>, cb: (item: T) => void): Instant
 }
 
 /** Provides access to new instances on construction. */
-export const created = <T>(cb: (o: any) => void) => (c: Instantiable<T>) => expose(c, cb);
+export const init = <T>(cb: (o: any) => void) => (c: Instantiable<T>) => expose(c, cb);
