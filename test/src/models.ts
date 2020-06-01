@@ -1,16 +1,19 @@
 import { init, input, output } from '../../src/index';
 
-@init((c: TestDeclarations) => c.initStr = 'boo')
-export class TestDeclarations {
-  constructor(public initStr: string) { }
+@init((x: TestClass1) => x.prop1 = 'first this')
+export class TestClass1 {
+  constructor(public prop1: string) { }
 
-  @input(args => args.length + ' arg(s)')
-  public testFuncInput(newStr: string): string {
-    return 'hey, ' + (newStr || this.initStr);
+  @input(args => 'fmt1')
+  public format1(): string {
+    return `format1: ${this.prop1}`;
   }
 
-  @output((val, args) => 'YO: ' + val)
-  public testFuncOutput(newStr: string): string {
-    return 'hey, ' + (newStr || this.initStr);
+  @output((val, args, o: TestClass1) => {
+    o.prop1 = args[0];
+    return `fmt2: ${o.prop1}`;
+  })
+  public format2(): string {
+    return `format2: ${this.prop1}`;
   }
 }
