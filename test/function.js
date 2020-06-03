@@ -13,6 +13,9 @@ describe('Function Decorators', () => {
     expect(sut.format2('you')).to.equal('fmt2: you');
   });
 
-});
+  it('@...', () => {
+    const sut = new ne_codl.TestClass1('me');
+    expect(sut.testFn('dfdf', true)).to.not.be.null;
+  });
 
-// TODO: import 'reflect-metadata' library for reflection
+});
