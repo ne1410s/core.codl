@@ -2,7 +2,7 @@ import {
   ArgumentDecorator,
   TypedArgumentDecorator,
   TypedPropertyDecorator,
-  TypedAccessorDecorator } from "../../src/decorator/types";
+  TypedAccessorDecorator } from '../../src';
 
 export const anyArg: ArgumentDecorator = (target, key, idx) => {
   console.log('wtf any wtf');

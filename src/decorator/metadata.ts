@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-import { TypedPropertyDecorator } from './types';
-
 const KEY_NAME = 'ne-codl_name';
 const KEY_DESCR = 'ne-codl_description';
 const KEY_FORMAT = 'ne-codl_format';
@@ -24,12 +22,3 @@ export const description = (val: string) => Reflect.metadata(KEY_DESCR, val);
  */
 export const format = (val: string) => Reflect.metadata(KEY_FORMAT, val);
 
-/**
- * Provides an initial / default value.
- * @param val The initial value.
- */
-export const initial = <T>(val: T): TypedPropertyDecorator<T> => {
-  return (target, key) => {
-    (target as any)[key] = val;
-  };
-};
