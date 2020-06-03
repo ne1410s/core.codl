@@ -6,7 +6,7 @@ describe('Instance Decorators', () => {
   it('@test', () => {
     const sut = new ne_codl.TestClass1('hello, world');
     expect(sut instanceof ne_codl.TestClass1).to.be.true;
-    expect(sut.testMe).to.equal(true);
+    expect(sut.testMe).to.equal(false);
   });
 
 });

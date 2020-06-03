@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { TypedPropertyDecorator, TypedAccessorDecorator } from './types';
+import { TypedPropertyDecorator } from './types';
 
 const KEY_NAME = 'ne-codl_name';
 const KEY_DESCR = 'ne-codl_description';
@@ -28,20 +28,8 @@ export const format = (val: string) => Reflect.metadata(KEY_FORMAT, val);
  * Provides an initial / default value.
  * @param val The initial value.
  */
-export const initial = (val: any): PropertyDecorator => {
+export const initial = <T>(val: T): TypedPropertyDecorator<T> => {
   return (target, key) => {
     (target as any)[key] = val;
   };
 };
-
-export const booleanProp = (): TypedPropertyDecorator<boolean> => {
-  return (target, key) => {
-    console.log('boolean!');
-  }
-}
-
-export const stringGetter = (): TypedAccessorDecorator<string> => {
-  return (target, key, desc) => {
-    console.log('string!', desc);
-  }
-} 

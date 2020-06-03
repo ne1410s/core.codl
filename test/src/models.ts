@@ -1,4 +1,5 @@
-import { init, input, output, initial, booleanProp, stringGetter, stringArg, anyArg } from '../../src/index';
+import { init, input, output, initial } from '../../src/index';
+import { stringGetter, booleanProp, stringArg, anyArg } from './decorators';
 
 @init((x: TestClass1) => x.prop1 = 'first this')
 export class TestClass1 {
@@ -8,7 +9,7 @@ export class TestClass1 {
     return 'bonjour';
   }
 
-  @booleanProp()
+  @booleanProp
   public get testBool(): boolean {
     return true;
   }
@@ -17,8 +18,8 @@ export class TestClass1 {
     public prop1: string) 
   {}
 
-  @booleanProp()
-  @initial(true)
+  @booleanProp
+  @initial(false)
   public testMe: boolean;
 
   public testMeToo: string;
@@ -38,7 +39,7 @@ export class TestClass1 {
 
   public testFn(
 
-      @stringArg()
+      @stringArg('something dynamic')
       param1: string,
       
       @anyArg
