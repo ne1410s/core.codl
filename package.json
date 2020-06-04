@@ -38,10 +38,10 @@
     "chai": "^4.2.0",
     "mocha": "^7.2.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.12.0",
+    "rollup": "^2.13.1",
     "rollup-plugin-terser": "^6.1.0",
     "rollup-plugin-typescript2": "^0.27.1",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.5"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
