@@ -12,8 +12,8 @@ describe('Metadata Decorators', () => {
   it('@fmt, getFmt', () => {
     const sut = new ne_codl.TestClass1('hello, world');
     expect(sut.price).to.equal(12.4534);
-    expect(sut.__get_price()).to.equal('£12.45');
+    expect(sut.priceFormatted).to.equal('£12.45');
     sut.price = 333.555;
-    expect(sut.__get_price()).to.equal('£333.56');
+    expect(sut.priceFormatted).to.equal('£333.56');
   });
 });

@@ -1,4 +1,4 @@
-import { init, input, output, initial, fmt, name, getName } from '../../src/index';
+import { init, input, output, initial, format, getFormatted, name, getName } from '../../src/index';
 import { stringGetter, booleanProp, stringArg, anyArg } from './decorators';
 
 @init((x: TestClass1) => x.prop1 = 'first this')
@@ -14,10 +14,13 @@ export class TestClass1 {
     return true;
   }
 
-  @fmt((x: number) => `£${x.toFixed(2)}`)
-  public get price(): number {
-    return 12.4534;
-  }
+  private _price: number = 12.4534;
+
+  @format((x: number) => `£${x.toFixed(2)}`)
+  public get price() { return this._price; }
+  public set price(value: number) { this._price = value; }
+
+  public get priceFormatted() { return getFormatted(this, 'price'); }
 
   constructor(
     public prop1: string) 
