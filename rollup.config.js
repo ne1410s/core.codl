@@ -1,7 +1,18 @@
-import rollup_browser from './rollup.browser.config';
-import rollup_bundler from './rollup.bundler.config';
+import typescript from 'rollup-plugin-typescript2';
+import pkg from './package.json';
 
-export default [
-  rollup_browser,
-  rollup_bundler
-];
+// UMD build
+export default {
+  input: 'src/index.ts',
+  external: [
+    'reflect-metadata'
+  ],
+  output: {
+    name: pkg.displayName,
+    file: pkg.browser,
+    format: 'umd'
+  },
+  plugins: [
+    typescript()
+  ]
+};
