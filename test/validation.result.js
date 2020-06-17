@@ -6,7 +6,11 @@ describe('@Validation (result)', () => {
   it('Invalid Result', () => {
     const sut = new ne_codl.ValidationResultTestModel();
     expect(sut.myString).to.be.undefined;
-    expect(sut.testValidity()).to.not.be.null;
+    const invalidResult = sut.testValidity();
+    sut.myString = 'hello';
+    const validResult = sut.testValidity();
+    expect(invalidResult.valid).to.be.false;
+    expect(validResult.valid).to.be.true;
   });
 
 });

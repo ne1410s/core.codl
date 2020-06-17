@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { TypedPropertyDecorator } from '../types';
-import { MetadataKeys } from '../shared-keys';
+import { MetadataKey } from '../shared-keys';
 
 /** Decorators for metadata purposes. */
 export abstract class Metadata {
@@ -10,7 +10,7 @@ export abstract class Metadata {
    * @param val The name.
    */
   public static readonly displayName = (val: string) => {
-    return Reflect.metadata(MetadataKeys.DISPLAY_NAME, val);
+    return Reflect.metadata(MetadataKey.DISPLAY_NAME, val);
   }
 
   /**
@@ -18,7 +18,7 @@ export abstract class Metadata {
    * @param val The description.
    */
   public static readonly description = (val: string) => {
-    return Reflect.metadata(MetadataKeys.DESCRIPTION, val);
+    return Reflect.metadata(MetadataKey.DESCRIPTION, val);
   }
 
   /**
@@ -26,6 +26,6 @@ export abstract class Metadata {
    * @param fn The format function.
    */
   public static readonly format = <T>(fn: (val: T) => string): TypedPropertyDecorator<T> => {
-    return Reflect.metadata(MetadataKeys.FORMAT, fn);  
+    return Reflect.metadata(MetadataKey.FORMAT, fn);  
   }
 }

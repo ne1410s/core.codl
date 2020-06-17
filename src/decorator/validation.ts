@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import { ValidationKeys } from '../shared-keys';
-import { Metadata } from './metadata';
+import { ValidationKey } from '../shared-keys';
 
 /** Decorators for validation purposes. */
 export abstract class Validation {
@@ -12,10 +11,11 @@ export abstract class Validation {
    * @param key The property key.
    */
   public static readonly required: PropertyDecorator = (trg, key) => {
+    
+    // Register property decoration on the object (to assist with reflection)
+    Reflect.defineMetadata(`${ValidationKey.REQUIRED}:${String(key)}`, key, trg);
 
-    //TODO: Set metadata listing on Object (trg) so that we can grab undefined properties generically later...
-
-    return Reflect.metadata(ValidationKeys.REQUIRED, true);
+    // Define the decoration on the property
+    Reflect.defineMetadata(ValidationKey.REQUIRED, true, trg, key);
   }
-
 }

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { MetadataKeys } from "../shared-keys";
+import { MetadataKey } from "../shared-keys";
 import { RecordKey } from "../types";
 
 export abstract class ReflectMetadata {
@@ -10,7 +10,7 @@ export abstract class ReflectMetadata {
    * @param key The property key.
    */
   public static readonly getDisplayName = (target: Object, key: RecordKey) => {
-    return Reflect.getMetadata(MetadataKeys.DISPLAY_NAME, target, key);
+    return Reflect.getMetadata(MetadataKey.DISPLAY_NAME, target, key);
   }
 
   /**
@@ -19,7 +19,7 @@ export abstract class ReflectMetadata {
    * @param key The property key.
    */
   public static readonly getDescription = (target: Object, key: RecordKey) => {
-    return Reflect.getMetadata(MetadataKeys.DESCRIPTION, target, key);
+    return Reflect.getMetadata(MetadataKey.DESCRIPTION, target, key);
   }
 
   /**
@@ -28,7 +28,7 @@ export abstract class ReflectMetadata {
    * @param key The property key.
    */
   public static readonly getFormatted = (target: Object, key: RecordKey) => {
-    const fn = Reflect.getMetadata(MetadataKeys.FORMAT, target, key);
+    const fn = Reflect.getMetadata(MetadataKey.FORMAT, target, key);
     const value = (target as any)[key];
     return fn ? fn(value) : value;
   }

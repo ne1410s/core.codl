@@ -1,10 +1,10 @@
 
-export enum MetadataKeys {
-  DISPLAY_NAME = 'ne-codl_metadata_display-name',
-  DESCRIPTION = 'ne-codl_metadata_description',
-  FORMAT = 'ne-codl_metadata_format',
+export const enum MetadataKey {
+  DISPLAY_NAME = 'ne-codl:metadata:display-name',
+  DESCRIPTION = 'ne-codl:metadata:description',
+  FORMAT = 'ne-codl:metadata:format',
 }
 
-export enum ValidationKeys {
-  REQUIRED = 'ne-codl_validation_required',
+export const enum ValidationKey {
+  REQUIRED = 'ne-codl:validation:required',
 }
