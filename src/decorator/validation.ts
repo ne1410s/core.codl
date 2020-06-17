@@ -10,7 +10,5 @@ export abstract class Validation {
    * @param trg The target object.
    * @param key The property key.
    */
-  public static readonly required: PropertyDecorator = (trg, key) => {
-    Reflect.metadata(ValidationKeys.REQUIRED, true);
-  };
+  public static readonly required: PropertyDecorator = Reflect.metadata(ValidationKeys.REQUIRED, true);
 }

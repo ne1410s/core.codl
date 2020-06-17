@@ -6,18 +6,17 @@ import { RecordKey } from "../types";
 export abstract class ReflectValidation {
 
   /**
-   * Retrieves whether a property is valid according to its required status.
+   * Retrieves the required validity status. 0, 0n and false are considered as
+   * being present; whereas null, undefined, NaN and empty strings are not.
    * @param target The parent object.
    * @param key The property key.
    */
   public static readonly isValid_Required = (target: Object, key: RecordKey): boolean => {
-    let retVal = true;
-    const decorated = Reflect.getMetadata(ValidationKeys.REQUIRED, target, key) === true;
-    if (decorated) {
-      const val = (target as any)[key];
-      retVal = val != null && val != '';
-    }
 
-    return retVal;
+    const value = (target as any)[key];
+    const required = Reflect.getMetadata(ValidationKeys.REQUIRED, target, key) === true;
+    const present = value !== null && value !== undefined && value !== NaN && value !== '';
+
+    return present || !required;
   }
 }
