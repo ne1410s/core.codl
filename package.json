@@ -36,9 +36,9 @@
   "homepage": "https://github.com/ne1410s/core.codl#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.2.0",
+    "mocha": "^8.0.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.15.0",
+    "rollup": "^2.16.1",
     "rollup-plugin-terser": "^6.1.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "^3.9.5"

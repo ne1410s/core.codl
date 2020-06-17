@@ -1,5 +1,8 @@
 export * from './types';
 
-export * from './decorator/intercept';
+export * from './decorator/interception';
 export * from './decorator/metadata';
-export * from './decorator/validate';
+export * from './decorator/validation';
+
+export * from './reflector/metadata';
+export * from './reflector/validation';

@@ -1,7 +1,7 @@
-import { init, input, output, initial, format, getFormatted, name, getName } from '../../src/index';
+import { Interception, Metadata, ReflectMetadata } from '../../src/index';
 import { stringGetter, booleanProp, stringArg, anyArg } from './decorators';
 
-@init((x: TestClass1) => x.prop1 = 'first this')
+@Interception.init((x: TestClass1) => x.prop1 = 'first this')
 export class TestClass1 {
 
   @stringGetter()
@@ -16,32 +16,32 @@ export class TestClass1 {
 
   private _price: number = 12.4534;
 
-  @format((x: number) => `£${x.toFixed(2)}`)
+  @Metadata.format((x: number) => `£${x.toFixed(2)}`)
   public get price() { return this._price; }
   public set price(value: number) { this._price = value; }
 
-  public get priceFormatted() { return getFormatted(this, 'price'); }
+  public get priceFormatted() { return ReflectMetadata.getFormatted(this, 'price'); }
 
   constructor(
     public prop1: string) 
   {}
 
   @booleanProp
-  @initial(false)
+  @Interception.initial(false)
   public testMe: boolean;
 
-  @name('bar')
+  @Metadata.displayName('bar')
   public testMeToo: string = 'foo';
   public get getTestMeTooName(): string {
-    return getName(this, 'testMeToo');
+    return ReflectMetadata.getDisplayName(this, 'testMeToo');
   }
 
-  @input(args => 'fmt1')
+  @Interception.input(args => 'fmt1')
   public format1(): string {
     return `format1: ${this.prop1}`;
   }
 
-  @output((val, args, o: TestClass1) => {
+  @Interception.output((val, args, o: TestClass1) => {
     o.prop1 = args[0];
     return `fmt2: ${o.prop1}`;
   })
