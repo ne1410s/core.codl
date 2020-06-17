@@ -5,7 +5,7 @@ import { RecordKey } from "../types";
 export abstract class ReflectMetadata {
 
   /**
-   * Retrieves the display name metadata.
+   * Retrieves the display name if provided (else the property key).
    * @param target The parent object.
    * @param key The property key.
    */
@@ -14,7 +14,7 @@ export abstract class ReflectMetadata {
   }
 
   /**
-   * Retrieves the description metadata.
+   * Retrieves the description.
    * @param target The parent object.
    * @param key The property key.
    */
@@ -23,12 +23,13 @@ export abstract class ReflectMetadata {
   }
 
   /**
-   * Retrieves the formatted value.
+   * Retrieves the formatted value if format provided (else the raw value).
    * @param target The parent object.
    * @param key The property key.
    */
   public static readonly getFormatted = (target: Object, key: RecordKey) => {
     const fn = Reflect.getMetadata(MetadataKeys.FORMAT, target, key);
-    return fn((target as any)[key]);
+    const value = (target as any)[key];
+    return fn ? fn(value) : value;
   }
 }

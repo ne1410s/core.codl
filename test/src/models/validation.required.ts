@@ -1,6 +1,6 @@
 import { Validation, ReflectValidation } from '../../../src/index';
 
-export class ValidationTestModel {
+export class ValidationRequiredTestModel {
 
   @Validation.required
   public get myNullAccessor(): number { return null; }

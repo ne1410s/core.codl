@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
-const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
+const ne_codl = require('../../dist/ne14_codl.umd.min.js.test');
 
-describe('Metadata Decoration', () => {
+describe('@Metadata', () => {
   
   it('@description', () => {
     const sut = new ne_codl.MetadataTestModel('hello, world');
