@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { ValidationKey } from '../../shared-keys';
 import { Validator, ValidatorOut } from './model';
 import { RequiredValidator } from './validators/required';
+import { RegexValidator } from './validators/regex';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -32,6 +33,7 @@ export abstract class ReflectValidation {
   /** Gets the validator function for a given key. */
   private static getValidator(key: string) {
     switch (key) {
+      case ValidationKey.REGEX: return RegexValidator;
       case ValidationKey.REQUIRED: return RequiredValidator;
       default: throw new RangeError(`No validator implemented for ${key}`);
     }

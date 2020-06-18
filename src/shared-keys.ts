@@ -6,9 +6,9 @@ export enum MetadataKey {
 }
 
 export enum ValidationKey {
+  REGEX = 'ne-codl:validation:regex',
   REQUIRED = 'ne-codl:validation:required',
   //MIN = ,
   //MAX = ,
-  //REGEX = ,
   //CUSTOM = .
 }

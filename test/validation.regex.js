@@ -1,0 +1,31 @@
+const expect = require('chai').expect;
+const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
+
+describe('@Validation.regex', () => {
+  
+  it('bad format -> invalid', () => {
+    const sut = new ne_codl.ValidationRegexTestModel();
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.valid).to.be.false;
+    const errs = summary.errors['myString'];
+    expect(errs.length).to.equal(1);
+    expect(errs[0]).to.equal('myString is invalid');
+  });
+
+  it('missing -> valid', () => {
+    const sut = new ne_codl.ValidationRegexTestModel();
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    const errs = summary.errors['myNumber'];
+    expect(errs.length).to.equal(1);
+    expect(errs[0].indexOf('invalid')).to.equal(-1);
+  });
+
+  it('provided, good -> valid', () => {
+    const sut = new ne_codl.ValidationRegexTestModel();
+    sut.myNumber = 8;
+    sut.myString = '123';
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.valid).to.be.true;
+  });
+
+});

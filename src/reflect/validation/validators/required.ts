@@ -1,5 +1,5 @@
-import { ReflectMetadata } from "../../..";
 import { ValidationKey } from "../../../shared-keys";
+import { ReflectMetadata } from "../../metadata";
 import { Validator, ValidatorOut } from "../model";
 
 /** Validates required items. 0, 0n and false are allowed */
