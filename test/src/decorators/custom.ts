@@ -1,4 +1,4 @@
-import { TypedArgumentDecorator, TypedPropertyDecorator, TypedAccessorDecorator } from '../../src';
+import { TypedArgumentDecorator, TypedPropertyDecorator, TypedAccessorDecorator } from '../../../src';
 
 /** Custom decorators. */
 export abstract class Custom {

@@ -3,62 +3,72 @@ const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.required', () => {
   
+  // TODO: Refactor to check that each of the below appear in the summary
+
   it('unset boolean -> invalid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
-    expect(sut.myBool).to.be.undefined;
-    expect(sut.testValidity('myBool')).to.equal(false);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.valid).to.be.false;
+    expect(summary.errors['myBool'].length).to.equal(1);
   });
 
   it('unset optional boolean -> invalid, set false -> valid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
-    expect(sut.myOptionalBool).to.be.undefined;
-    expect(sut.testValidity('myOptionalBool')).to.equal(false);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myOptionalBool'].length).to.equal(1);
     sut.myOptionalBool = false;
-    expect(sut.testValidity('myOptionalBool')).to.equal(true);
+    summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myOptionalBool']).to.be.undefined;
   });
 
   it('unset number -> invalid, set 0 -> valid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
-    expect(sut.myNumber).to.be.undefined;
-    expect(sut.testValidity('myNumber')).to.equal(false);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myNumber'].length).to.equal(1);
     sut.myNumber = 0;
-    expect(sut.testValidity('myNumber')).to.equal(true);
+    summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myNumber']).to.be.undefined;
   });
 
   it('undecorated -> valid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
-    expect(sut.myUndecorated).to.be.undefined;
-    expect(sut.testValidity('myUndecorated')).to.equal(true);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myUndecorated']).to.be.undefined;
   });
 
   it('empty string -> invalid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     expect(sut.myString).to.equal('');
-    expect(sut.testValidity('myString')).to.equal(false);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myString'].length).to.equal(1);
   });
 
   it('whitespace string -> valid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     expect(sut.myOtherString).to.equal(' ');
-    expect(sut.testValidity('myOtherString')).to.equal(true);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myOtherString']).to.be.undefined;
   });
 
   it('non-existant -> valid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     expect(sut.rarara).to.be.undefined;
-    expect(sut.testValidity('rarara')).to.equal(true);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['rarara']).to.be.undefined;
   });
 
   it('null accessor -> invalid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     expect(sut.myNullAccessor).to.not.be.undefined;
-    expect(sut.testValidity('myNullAccessor')).to.equal(false);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myNullAccessor'].length).to.equal(1);
   });
 
-  it('null accessor -> invalid', () => {
+  it('present accessor -> valid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     expect(sut.myPresentAccessor).to.equal(33);
-    expect(sut.testValidity('myPresentAccessor')).to.equal(true);
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myPresentAccessor']).to.be.undefined;
   });
 
 });

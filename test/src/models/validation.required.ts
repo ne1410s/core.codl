@@ -1,4 +1,4 @@
-import { Validation, ReflectValidation } from '../../../src/index';
+import { Validation } from '../../../src/index';
 
 export class ValidationRequiredTestModel {
 
@@ -24,8 +24,4 @@ export class ValidationRequiredTestModel {
   public myOtherString = ' ';
 
   public myUndecorated: string;
-
-  public testValidity(key: string): boolean {
-    return ReflectValidation.isValid_Required(this, key);
-  }
 }

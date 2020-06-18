@@ -13,7 +13,7 @@ export abstract class Validation {
   public static readonly required: PropertyDecorator = (trg, key) => {
     
     // Register property decoration on the object (to assist with reflection)
-    Reflect.defineMetadata(`${ValidationKey.REQUIRED}:${String(key)}`, key, trg);
+    Reflect.defineMetadata(`${ValidationKey.REQUIRED}:${key.toString()}`, key, trg);
 
     // Define the decoration on the property
     Reflect.defineMetadata(ValidationKey.REQUIRED, true, trg, key);

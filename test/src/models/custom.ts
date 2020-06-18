@@ -1,4 +1,4 @@
-import { Custom } from '../custom';
+import { Custom } from '../decorators/custom';
 
 export class CustomTestModel {
 
