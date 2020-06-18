@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { ValidationKey } from '../shared-keys';
+import { ReflectMetadata } from './metadata';
 
 declare type Validator = (trg: Object, key: string, test: string) => ValidationResult;
 
@@ -27,8 +28,12 @@ export abstract class ReflectValidation {
     const required = Reflect.getMetadata(ValidationKey.REQUIRED, trg, key) === true;
     const present = value !== null && value !== undefined && value !== NaN && value !== '';
     const valid = present || !required;
-    const message = valid ? undefined : `${key.toString()} is required`;
-    return { key, value, test, valid, message } as ValidationResult;
+    const retVal: ValidationResult = { key, value, test, valid };
+    if (!retVal.valid) {
+      const name = ReflectMetadata.getDisplayName(trg, key);
+      retVal.message = `${name} is required`;
+    }
+    return retVal;
   }
 
   /** Gets definitions for each supported validation method. */

@@ -3,8 +3,6 @@ const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.required', () => {
   
-  // TODO: Refactor to check that each of the below appear in the summary
-
   it('unset boolean -> invalid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     let summary = ne_codl.ReflectValidation.validate(sut);

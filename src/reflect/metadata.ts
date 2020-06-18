@@ -9,8 +9,8 @@ export abstract class ReflectMetadata {
    * @param target The parent object.
    * @param key The property key.
    */
-  public static readonly getDisplayName = (target: Object, key: RecordKey) => {
-    return Reflect.getMetadata(MetadataKey.DISPLAY_NAME, target, key);
+  public static readonly getDisplayName = (target: Object, key: RecordKey): string => {
+    return Reflect.getMetadata(MetadataKey.DISPLAY_NAME, target, key) || key;
   }
 
   /**
@@ -18,7 +18,7 @@ export abstract class ReflectMetadata {
    * @param target The parent object.
    * @param key The property key.
    */
-  public static readonly getDescription = (target: Object, key: RecordKey) => {
+  public static readonly getDescription = (target: Object, key: RecordKey): string => {
     return Reflect.getMetadata(MetadataKey.DESCRIPTION, target, key);
   }
 
@@ -27,7 +27,7 @@ export abstract class ReflectMetadata {
    * @param target The parent object.
    * @param key The property key.
    */
-  public static readonly getFormatted = (target: Object, key: RecordKey) => {
+  public static readonly getFormatted = (target: Object, key: RecordKey): string => {
     const fn = Reflect.getMetadata(MetadataKey.FORMAT, target, key);
     const value = (target as any)[key];
     return fn ? fn(value) : value;
