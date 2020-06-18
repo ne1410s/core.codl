@@ -5,4 +5,4 @@ export * from './decorate/metadata';
 export * from './decorate/validation';
 
 export * from './reflect/metadata';
-export * from './reflect/validation';
+export * from './reflect/validation/validation';

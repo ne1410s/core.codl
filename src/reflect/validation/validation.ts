@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import { ValidationKey } from '../shared-keys';
-import { ReflectMetadata } from './metadata';
-
-declare type Validator = (trg: Object, key: string, test: string) => ValidationResult;
+import { ValidationKey } from '../../shared-keys';
+import { Validator, ValidatorOut } from './model';
+import { RequiredValidator } from './validators/required';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -22,20 +21,6 @@ export abstract class ReflectValidation {
     return retVal;
   }
 
-  /** Validates required items. 0, 0n and false are allowed */
-  private static validateRequired: Validator = (trg, key, test) => {
-    const value = (trg as any)[key];
-    const required = Reflect.getMetadata(ValidationKey.REQUIRED, trg, key) === true;
-    const present = value !== null && value !== undefined && value !== NaN && value !== '';
-    const valid = present || !required;
-    const retVal: ValidationResult = { key, value, test, valid };
-    if (!retVal.valid) {
-      const name = ReflectMetadata.getDisplayName(trg, key);
-      retVal.message = `${name} is required`;
-    }
-    return retVal;
-  }
-
   /** Gets definitions for each supported validation method. */
   private static getDefinitions(): ValidationDef[] {
     return Object.keys(ValidationKey).map(test => {
@@ -47,7 +32,7 @@ export abstract class ReflectValidation {
   /** Gets the validator function for a given key. */
   private static getValidator(key: string) {
     switch (key) {
-      case ValidationKey.REQUIRED: return ReflectValidation.validateRequired;
+      case ValidationKey.REQUIRED: return RequiredValidator;
       default: throw new RangeError(`No validator implemented for ${key}`);
     }
   }
@@ -58,7 +43,10 @@ export abstract class ReflectValidation {
     return Reflect.getMetadataKeys(trg).reduce((acc: ValidationResult[], cur) => {
       acc.push(...allDefs
         .filter(d => `${cur}`.indexOf(d.meta + ':') === 0)
-        .map(def => def.fn(trg, `${cur}`.replace(def.meta + ':', ''), def.test)));
+        .map(def => {
+          const key = `${cur}`.replace(def.meta + ':', '');
+          return { ...def.fn(trg, key), key, test: def.test };
+        }));
       return acc;
     }, []) as ValidationResult[];
   }
@@ -75,10 +63,7 @@ interface ValidationDef {
   meta: ValidationKey;
 }
 
-interface ValidationResult {
+interface ValidationResult extends ValidatorOut {
   key: string;
-  value: any;
   test: string;
-  valid: boolean;
-  message?: string;
 }
