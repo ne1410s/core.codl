@@ -28,4 +28,12 @@ describe('@Validation.regex', () => {
     expect(summary.valid).to.be.true;
   });
 
+  it('empty string -> always valid', () => {
+    const sut = new ne_codl.ValidationRegexTestModel();
+    sut.myNumber = 8;
+    sut.myString = '';
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.valid).to.be.true;
+  });
+
 });
