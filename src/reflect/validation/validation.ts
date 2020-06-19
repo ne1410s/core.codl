@@ -3,6 +3,7 @@ import { ValidationKey } from '../../shared-keys';
 import { Validator, ValidatorOut } from './model';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
+import { RangeValidator } from './validators/range';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -22,35 +23,37 @@ export abstract class ReflectValidation {
     return retVal;
   }
 
-  /** Gets definitions for each supported validation method. */
-  private static getDefinitions(): ValidationDef[] {
-    return Object.keys(ValidationKey).map(test => {
-      const meta = (ValidationKey as any)[test] as ValidationKey;
-      return { test, meta, fn: ReflectValidation.getValidator(meta) };
-    });
-  }
-
   /** Gets the validator function for a given key. */
   private static getValidator(key: string) {
     switch (key) {
+      case ValidationKey.MAX: return RangeValidator;
+      case ValidationKey.MIN: return RangeValidator;
       case ValidationKey.REGEX: return RegexValidator;
       case ValidationKey.REQUIRED: return RequiredValidator;
-      default: throw new RangeError(`No validator implemented for ${key}`);
+      default:
+        throw new RangeError(`No validator implemented for ${key}`);
     }
   }
 
   /** Performs all supported validations for all decorated properties. */
   private static processAll(trg: Object): ValidationResult[] {
-    const allDefs = ReflectValidation.getDefinitions();
-    return Reflect.getMetadataKeys(trg).reduce((acc: ValidationResult[], cur) => {
-      acc.push(...allDefs
-        .filter(d => `${cur}`.indexOf(d.meta + ':') === 0)
-        .map(def => {
-          const key = `${cur}`.replace(def.meta + ':', '');
-          return { ...def.fn(trg, key), key, test: def.test };
-        }));
+
+    const dupeGroups = Object.keys(ValidationKey).map(test => {
+      const meta = (ValidationKey as any)[test] as ValidationKey;
+      const fn = ReflectValidation.getValidator(meta);
+      return { fn, test, meta };
+    });
+    
+    const defs = Reflect.getMetadataKeys(trg).map(t => `${t}`).reduce((acc, cur) => {
+      const raw = dupeGroups.filter(dg => cur.indexOf(dg.meta + ':') === 0)[0];
+      const key = cur.replace(raw.meta + ':', '');
+      const prior = acc.filter(a => a.key === key && a.fn === raw.fn)[0];
+      if (prior) prior.tests.push(raw.test);
+      else acc.push({ key, fn: raw.fn, tests: [raw.test] });
       return acc;
-    }, []) as ValidationResult[];
+    }, [] as ValidationDef[]);
+    
+    return defs.map(d => ({ key: d.key, tests: d.tests, ...d.fn(trg, d.key) }));  
   }
 }
 
@@ -60,12 +63,13 @@ export interface ValidationSummary {
 }
 
 interface ValidationDef {
+  key: string;
   fn: Validator;
-  test: string;
-  meta: ValidationKey;
+  tests: string[];
+
 }
 
 interface ValidationResult extends ValidatorOut {
   key: string;
-  test: string;
+  tests: string[];
 }
