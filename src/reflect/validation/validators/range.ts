@@ -24,11 +24,16 @@ export const RangeValidator: Validator = (trg, key) => {
       const name = ReflectMetadata.getDisplayName(trg, key);
       const fmtMin = hasMin && !isString ? ReflectMetadata.getFormatted(trg, key, min) : min;
       const fmtMax = hasMax && !isString ? ReflectMetadata.getFormatted(trg, key, max) : max;
+
+      const isDate = value instanceof Date;
+      const compareLT = isDate ? 'before' : 'less than';
+      const compareGT = isDate ? 'after' : 'greater than';
+
       retVal.message = hasMin && hasMax 
         ? `${name} must be between ${fmtMin} and ${fmtMax}`
           : hasMin 
-            ? `${name} cannot be less than ${fmtMin}`
-            : `${name} cannot exceed ${fmtMax}`;
+            ? `${name} cannot be ${compareLT} ${fmtMin}`
+            : `${name} cannot be ${compareGT} ${fmtMax}`;
 
       if (isString) retVal.message += ' characters';
     }
