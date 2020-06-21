@@ -4,6 +4,7 @@ import { Validator, ValidatorOut } from './model';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
+import { CustomValidator } from './validators/custom';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -26,6 +27,7 @@ export abstract class ReflectValidation {
   /** Gets the validator function for a given key. */
   private static getValidator(key: string) {
     switch (key) {
+      case ValidationKey.CUSTOM: return CustomValidator;
       case ValidationKey.MAX: return RangeValidator;
       case ValidationKey.MIN: return RangeValidator;
       case ValidationKey.REGEX: return RegexValidator;

@@ -1,9 +1,25 @@
 import 'reflect-metadata';
 import { ValidationKey } from '../shared-keys';
 import { TypedPropertyDecorator } from '../types';
+import { CValidator } from '../reflect/validation/model';
 
 /** Decorators for validation purposes. */
 export abstract class Validation {
+
+  /** 
+   * Associates a property with a custom validator. Unlike most other validation
+   * decorators, ALL values will be tested (rather than being skipped if it was
+   * deemed 'unprovided') - the decision is not taken on the caller's behalf. If
+   * the function returns false, the value is deemed invalid and a generic error
+   * is used. Else if it returns a string, this string is used as the message,
+   * with null or empty strings taken to indicate that the value is valid). 
+   */
+  public static readonly custom: <T>(fn: CValidator) => TypedPropertyDecorator<T> = fn => {
+    return (trg, key) => {
+      Reflect.defineMetadata(`${ValidationKey.CUSTOM}:${key.toString()}`, key, trg);
+      Reflect.defineMetadata(ValidationKey.CUSTOM, fn, trg, key);
+    };
+  }
 
   /**
    * Associates a number or date property with a maximum value. 'Unprovided'
@@ -11,7 +27,7 @@ export abstract class Validation {
    * value must not exceed the upper bound supplied to be valid.
    * @param uBound The maximum value.
    */
-  public static readonly max: <T extends Number | Date>(uBound: T) => TypedPropertyDecorator<T> = (uBound) => {
+  public static readonly max: <T extends Number | Date>(uBound: T) => TypedPropertyDecorator<T> = uBound => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.MAX}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.MAX, uBound, trg, key);
@@ -24,7 +40,7 @@ export abstract class Validation {
    * Otherwise the string length must not exceed the upper bound supplied.
    * @param uBound The maximum length.
    */
-  public static readonly maxLength: (uBound: number) => TypedPropertyDecorator<String> = (uBound) => {
+  public static readonly maxLength: (uBound: number) => TypedPropertyDecorator<String> = uBound => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.MAX}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.MAX, uBound, trg, key);
@@ -37,7 +53,7 @@ export abstract class Validation {
    * less than the lower bound supplied to be valid.
    * @param lBound The minimum value.
    */
-  public static readonly min: <T extends Number | Date>(lBound: T) => TypedPropertyDecorator<T> = (lBound) => {
+  public static readonly min: <T extends Number | Date>(lBound: T) => TypedPropertyDecorator<T> = lBound => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.MIN}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.MIN, lBound, trg, key);
@@ -50,7 +66,7 @@ export abstract class Validation {
    * Otherwise the string length must not be less than the bound supplied.
    * @param lBound The minimum length.
    */
-  public static readonly minLength: (lBound: number) => TypedPropertyDecorator<String> = (lBound) => {
+  public static readonly minLength: (lBound: number) => TypedPropertyDecorator<String> = lBound => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.MIN}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.MIN, lBound, trg, key);
@@ -78,7 +94,7 @@ export abstract class Validation {
    * value must match the regex supplied to be valid.
    * @param regex The validation pattern.
    */
-  public static readonly regex: (regex: string | RegExp) => PropertyDecorator = (regex) => {
+  public static readonly regex: (regex: string | RegExp) => PropertyDecorator = regex => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.REGEX}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.REGEX, regex, trg, key);

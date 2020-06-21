@@ -1,4 +1,5 @@
 export declare type Validator = (trg: Object, key: string) => ValidatorOut;
+export declare type CValidator = (val: unknown, trg: Object) => string | boolean;
 
 export interface ValidatorOut {
   value: unknown;
