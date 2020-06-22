@@ -73,19 +73,11 @@ export abstract class ReflectValidation {
 
     const retVal = deDuped.map(d => ({ key: pfx ? pfx + '.' + d.key : d.key, tests: d.tests, ...d.fn(trg, d.key) }));
 
-    //console.log(pfx || '{PARENT}', '-->', retVal.filter(r => r.valid).length, '/', retVal.length, 'test(s) passed');
-
     Object.getOwnPropertyNames(trg)
       .map(key => ({ key, value: (trg as any)[key] }))
       .filter(kvp => kvp.value instanceof Object)
       .forEach(kvp => {
-
         if (!isNaN(parseInt(kvp.key))) kvp.key = `[${kvp.key}]`;
-
-        //console.log('PROTO0 - META:', Reflect.getMetadataKeys(kvp.value));
-        //console.log('PROTO1 - META:', Reflect.getMetadataKeys(kvp.value.constructor));
-        //console.log('PROTO2 - META', Reflect.getMetadataKeys(Object.getPrototypeOf(kvp.value)));
-
         retVal.push(...this.processAllRecursively(dupeDefs, kvp.value, pfx + kvp.key));
       });
 
