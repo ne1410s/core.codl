@@ -28,10 +28,11 @@ describe('@Validation.required', () => {
     expect(summary.errors['myNumber']).to.be.undefined;
   });
 
-  it('undecorated -> valid', () => {
+  it('unset string -> invalid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
+    delete sut.myString;
     let summary = ne_codl.ReflectValidation.validate(sut);
-    expect(summary.errors['myUndecorated']).to.be.undefined;
+    expect(summary.errors['myString'].length).to.equal(1);
   });
 
   it('empty string -> invalid', () => {
@@ -46,6 +47,12 @@ describe('@Validation.required', () => {
     expect(sut.myOtherString).to.equal(' ');
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.errors['myOtherString']).to.be.undefined;
+  });
+
+  it('undecorated -> valid', () => {
+    const sut = new ne_codl.ValidationRequiredTestModel();
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.errors['myUndecorated']).to.be.undefined;
   });
 
   it('non-existant -> valid', () => {

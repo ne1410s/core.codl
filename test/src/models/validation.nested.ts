@@ -6,7 +6,7 @@ export class ValidationNestedTestModel {
   public myArr: ValidationNestedSubModel[];
 }
 
-class ValidationNestedSubModel {
+export class ValidationNestedSubModel {
 
   @Metadata.displayName('Nested String')
   @Validation.required

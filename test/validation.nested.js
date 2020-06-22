@@ -11,10 +11,10 @@ describe('@Validation (nested)', () => {
 
   it('custom error message', () => {
     const sut = new ne_codl.ValidationNestedTestModel();
-    sut.myArr = [{}];
+    sut.myArr = [new ne_codl.ValidationNestedSubModel()];
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.false;
-    const nestErr = summary.errors['myArr.myString'];
+    const nestErr = summary.errors['myArr[0].myString'];
     expect(nestErr).to.not.be.undefined;
     expect(nestErr.length).to.equal(1);
     expect(nestErr[0]).to.equal('Nested String is required');
