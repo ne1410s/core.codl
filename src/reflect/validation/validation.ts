@@ -5,6 +5,7 @@ import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
 import { CustomValidator } from './validators/custom';
+import { LengthRangeValidator } from './validators/length-range';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -27,11 +28,19 @@ export abstract class ReflectValidation {
   /** Gets the validator function for a given key. */
   private static getValidator(key: string) {
     switch (key) {
-      case ValidationKey.CUSTOM: return CustomValidator;
-      case ValidationKey.MAX: return RangeValidator;
-      case ValidationKey.MIN: return RangeValidator;
-      case ValidationKey.REGEX: return RegexValidator;
+      
+      case ValidationKey.MIN_LENGTH:
+      case ValidationKey.MAX_LENGTH:
+        return LengthRangeValidator;
+
+      case ValidationKey.MIN:
+      case ValidationKey.MAX:
+        return RangeValidator;
+        
       case ValidationKey.REQUIRED: return RequiredValidator;
+      case ValidationKey.REGEX: return RegexValidator;
+      case ValidationKey.CUSTOM: return CustomValidator;
+
       default:
         throw new RangeError(`No validator implemented for ${key}`);
     }

@@ -36,4 +36,16 @@ describe('@Validation.regex', () => {
     expect(summary.valid).to.be.true;
   });
 
+  it('array regex -> invalid item', () => {
+    const sut = new ne_codl.ValidationRegexTestModel();
+    sut.myNumber = 8;
+    sut.myString = '123';
+    sut.myVals.push('defcon5');
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    const arrErrs = summary.errors['myVals'];
+    expect(arrErrs).to.not.be.undefined;
+    expect(arrErrs.length).to.equal(1);
+    expect(arrErrs[0]).to.equal('myVals contains an invalid item');
+  });
+
 });

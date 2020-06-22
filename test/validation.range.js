@@ -6,7 +6,6 @@ describe('@Validation.range', () => {
   it('all ok -> valid', () => {
     const sut = new ne_codl.ValidationRangeTestModel();
     sut.myNumber = 28;
-    sut.myString = 'hi';
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.true;
   });
@@ -14,7 +13,6 @@ describe('@Validation.range', () => {
   it('range with format -> formatted error values', () => {
     const sut = new ne_codl.ValidationRangeTestModel();
     sut.myNumber = -100;
-    sut.myString = 'hi';
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.false;
     const numErrors = summary.errors['myNumber'];
@@ -26,7 +24,6 @@ describe('@Validation.range', () => {
     const sut = new ne_codl.ValidationRangeTestModel();
     sut.myNumber = 50;
     sut.myNumberMax2 = 2.001;
-    sut.myString = 'hi';
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.false;
     const numErrs = summary.errors['myNumberMax2'];
@@ -47,6 +44,18 @@ describe('@Validation.range', () => {
     expect(dateErrs).to.not.be.undefined;
     expect(dateErrs.length).to.equal(1);
     expect(dateErrs[0]).to.equal('myDate cannot be before 1/2/2000');
+  });
+
+  it('empty array with min -> invalid', () => {
+    const sut = new ne_codl.ValidationRangeTestModel();
+    sut.myNumber = 28;
+    sut.myStrArr = [];
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.valid).to.be.false;
+    const arrErrs = summary.errors['myStrArr'];
+    expect(arrErrs).to.not.be.undefined;
+    expect(arrErrs.length).to.equal(1);
+    expect(arrErrs[0]).to.equal('myStrArr cannot contain fewer than 3 items');
   });
 
 });

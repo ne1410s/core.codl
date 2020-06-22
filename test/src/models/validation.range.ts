@@ -19,4 +19,7 @@ export class ValidationRangeTestModel {
 
   @Validation.minLength(1)
   public myString = '';
+
+  @Validation.minLength(3)
+  public myStrArr: string[];
 }

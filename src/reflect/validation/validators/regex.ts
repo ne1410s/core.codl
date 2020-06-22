@@ -11,14 +11,18 @@ export const RegexValidator: Validator = (trg, key) => {
   if (isProvided(value)) {
 
     const regex = new RegExp(Reflect.getMetadata(ValidationKey.REGEX, trg, key));
-    const isMatch = regex.test(value);
-    if (!isMatch) {
+    const isArray = Array.isArray(value);
+    const tests: any[] = isArray ? value : [value];
+    const allOk = tests.every(test => regex.test(test.toString()));
 
+    if (!allOk) {
       const name = ReflectMetadata.getDisplayName(trg, key);
-      retVal.message = `${name} is invalid`;
-      retVal.valid = false;
+      retVal.message = isArray
+        ? `${name} contains an invalid item`
+        : `${name} is invalid`;
     }
   }
-  
+
+  retVal.valid = !retVal.message;
   return retVal;
 }

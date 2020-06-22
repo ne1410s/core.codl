@@ -9,4 +9,7 @@ export class ValidationRegexTestModel {
   @Validation.required
   @Validation.regex('[5-9]')
   public myNumber: number;
+
+  @Validation.regex(/^(\d+|[a-z]+)$/)
+  public myVals: any[] = [ 22, 'text' ]
 }

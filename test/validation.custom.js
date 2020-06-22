@@ -27,7 +27,6 @@ describe('@Validation.custom', () => {
     const sut = new ne_codl.ValidationCustomTestModel();
     delete sut.myString;
     let summary = ne_codl.ReflectValidation.validate(sut);
-    console.log(summary.errors);
     expect(summary.valid).to.be.true;
   });
 

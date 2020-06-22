@@ -1,14 +1,16 @@
 
 export enum MetadataKey {
-  DISPLAY_NAME = 'ne-codl:metadata:display-name',
-  DESCRIPTION = 'ne-codl:metadata:description',
-  FORMAT = 'ne-codl:metadata:format',
+  DISPLAY_NAME  = 'ne-codl:metadata:display-name',
+  DESCRIPTION   = 'ne-codl:metadata:description',
+  FORMAT        = 'ne-codl:metadata:format',
 }
 
 export enum ValidationKey {
-  CUSTOM = 'ne-codl:validation:custom',
-  MAX = 'ne-codl:validation:max',
-  MIN = 'ne-codl:validation:min',
-  REGEX = 'ne-codl:validation:regex',
-  REQUIRED = 'ne-codl:validation:required',
+  REQUIRED      = 'ne-codl:validation:required',
+  MIN_LENGTH    = 'ne-codl:validation:min-length',
+  MAX_LENGTH    = 'ne-codl:validation:max-length',
+  MIN           = 'ne-codl:validation:min',
+  MAX           = 'ne-codl:validation:max',
+  REGEX         = 'ne-codl:validation:regex',
+  CUSTOM        = 'ne-codl:validation:custom',
 }
