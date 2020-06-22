@@ -4,6 +4,7 @@ export * from './models/custom';
 export * from './models/interception';
 export * from './models/metadata';
 export * from './models/validation.custom';
+export * from './models/validation.nested';
 export * from './models/validation.range';
 export * from './models/validation.regex';
 export * from './models/validation.required';
