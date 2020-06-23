@@ -11,11 +11,16 @@ import { LengthRangeValidator } from './validators/length-range';
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
 
-  public static validate<T extends Object>(type: Ctor<T>, target: Object): ValidationSummary {
-    if (!target) throw new TypeError('No target provided');
+  public static validate<T extends Object>(target: Object, type?: Ctor<T>): ValidationSummary {
+    const proto = type?.prototype || Object.getPrototypeOf(target || {});
+    if (!proto) throw new TypeError('No type data could be found');
     const validators = this.getValidators();
-    const tests = ReflectValidation.buildTestPlan(validators, type, target);
-    const results: ValidationResult[] = tests.map(t => ({ key: t.key, tests: t.tests, ...t.fn(t.trg, t.key, t.type.prototype) }))
+    const tests = ReflectValidation.buildTestPlan(validators, proto, target);
+    const results: ValidationResult[] = tests.map(t => {
+      const output = t.fn(t.trg, t.key, t.proto);
+      const key = t.pfx ? `${t.pfx}.${t.key}` : t.key;
+      return { key, tests: t.tests, ...output };
+    });
     const retVal: ValidationSummary = { valid: results.every(r => r.valid) };
     if (!retVal.valid) {
       retVal.errors = results.filter(r => !r.valid).reduce((acc, cur) => {
@@ -61,9 +66,8 @@ export abstract class ReflectValidation {
     }
   }
 
-  private static buildTestPlan<T>(dupeDefs: ValidatorDef[], type: Ctor<T>, trg: Object, pfx: string = ''): ValidationInstruction[] {  
-    
-    return Reflect.getMetadataKeys(type.prototype)
+  private static buildTestPlan(dupeDefs: ValidatorDef[], proto: any, trg: Object, pfx: string = ''): ValidationInstruction[] {  
+    return Reflect.getMetadataKeys(proto)
       .map(k => `${k}`)
       .reduce((acc, cur) => {
         const valDef = dupeDefs.filter(dg => cur.indexOf(dg.meta + ':') === 0)[0];  
@@ -71,33 +75,24 @@ export abstract class ReflectValidation {
           const key = cur.replace(valDef.meta + ':', '');
           const prior = acc.filter(a => a.key === key && a.fn === valDef.fn)[0];
           if (prior) prior.tests.push(valDef.test);
-          else acc.push({ key, trg, type, fn: valDef.fn, tests: [valDef.test], });
+          else acc.push({ pfx, key, trg, proto, fn: valDef.fn, tests: [valDef.test] });
         }
         else if (cur.indexOf(`${MetadataKey.TYPE}:`) === 0) {
           const subkey = cur.replace(`${MetadataKey.TYPE}:`, '');
-          const subtype = Reflect.getMetadata(cur, type.prototype);
+          const subproto = Reflect.getMetadata(cur, proto).prototype;
           const subobj = (trg as any || {})[subkey];
-          if (subobj) { // skip subtype if nothing defined (required is still checked)
-            acc.push(...ReflectValidation.buildTestPlan(dupeDefs, subtype, subobj, pfx + '.' + subkey));
+          if (Array.isArray(subobj)) {
+            subobj.forEach((subitem, i) => {
+              const subpfx = pfx ? `${pfx}.${subkey}[${i}]` : `${subkey}[${i}]`;
+              acc.push(...ReflectValidation.buildTestPlan(dupeDefs, subproto, subitem || {}, subpfx));
+            });
+          } else if (subobj) {
+            const subpfx = pfx ? `${pfx}.${subkey}` : subkey;
+            acc.push(...ReflectValidation.buildTestPlan(dupeDefs, subproto, subobj, subpfx));
           }
         }
         return acc;
       }, [] as ValidationInstruction[]);
-    
-    // TODO: Drill-down keys
-    // TODO: Check array items behaviour!
-    // TODO: Swap params order on valdiate()
-      // (so that type param is 2nd and optional - throw runtime error if no proto can be inferred)
-
-    //const retVal = deDuped.map(d => ({ key: pfx ? pfx + '.' + d.key : d.key, tests: d.tests, ...d.fn(trg, d.key) }));
-
-    // Object.getOwnPropertyNames(trg)
-    //   .map(key => ({ key, value: (trg as any)[key] }))
-    //   .filter(kvp => kvp.value instanceof Object)
-    //   .forEach(kvp => {
-    //     if (!isNaN(parseInt(kvp.key))) kvp.key = `[${kvp.key}]`;
-    //     retVal.push(...this.processAllRecursively(dupeDefs, kvp.value, pfx + kvp.key));
-    //   });
   }
 }
 
@@ -113,9 +108,10 @@ interface ValidatorDef {
 }
 
 interface ValidationInstruction {
+  pfx: string;
   key: string;
   trg: Object;
-  type: Ctor<Object>;
+  proto: any;
   fn: Validator;
   tests: string[];
 }
