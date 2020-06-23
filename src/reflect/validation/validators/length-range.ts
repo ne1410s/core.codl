@@ -3,15 +3,15 @@ import { ReflectMetadata } from "../../metadata";
 import { Validator, ValidatorOut, isProvided } from "../model";
 
 /** Validates string / array length are within specified range. */
-export const LengthRangeValidator: Validator = (trg, key) => {
+export const LengthRangeValidator: Validator = (trg, key, proto) => {
 
   const value = (trg as any)[key];
   const retVal: ValidatorOut = { value, valid: true };
 
   if (isProvided(value)) {
 
-    const minLength = Reflect.getMetadata(ValidationKey.MIN_LENGTH, trg, key);
-    const maxLength = Reflect.getMetadata(ValidationKey.MAX_LENGTH, trg, key);
+    const minLength = Reflect.getMetadata(ValidationKey.MIN_LENGTH, proto, key);
+    const maxLength = Reflect.getMetadata(ValidationKey.MAX_LENGTH, proto, key);
     const hasMinLen = isProvided(minLength);
     const hasMaxLen = isProvided(maxLength);
 
@@ -19,7 +19,7 @@ export const LengthRangeValidator: Validator = (trg, key) => {
     const maxOk = !hasMaxLen || value.length <= maxLength;
     
     if (!minOk || !maxOk) {
-      const name = ReflectMetadata.getDisplayName(trg, key);
+      const name = ReflectMetadata.getDisplayName(proto, key);
       const noun = typeof value === 'string' ? 'character' : 'item';
       const pluraliser = value.length === 1 ? '' : 's';
       retVal.message = hasMinLen && hasMaxLen

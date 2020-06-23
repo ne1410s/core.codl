@@ -20,9 +20,17 @@ describe('@Validation (nested)', () => {
   //   expect(nestErr[0]).to.equal('Nested String is required');
   // });
 
-  it('ts cast', () => {
-    const summary = ne_codl.TestNesting(JSON.parse('{ "nummy": "xyz" }'));
-    expect(summary.valid).to.equal(false);
-  });
+  // it('ts cast', () => {
+  //   const summary = ne_codl.TestNesting(JSON.parse('{ "nummy": "xyz" }'));
+  //   expect(summary.valid).to.be.false;
+  // });
 
+  it('js cast', () => {
+    const type = ne_codl.ValidationNestingParentModel;
+    const test = JSON.parse('{ "nummy": "xyz" }');
+    let summary = ne_codl.ReflectValidation.validate(type, test);
+    expect(summary.valid).to.be.false;
+    console.log(summary);
+  });
+  
 });

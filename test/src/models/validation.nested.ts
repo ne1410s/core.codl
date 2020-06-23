@@ -1,9 +1,4 @@
-import { Validation, Metadata, ReflectValidation, ValidationSummary } from '../../../src/index';
-import { MetadataKey } from '../../../src/shared-keys';
-
-export function TestNesting(obj: Object): ValidationSummary {
-  return ReflectValidation.validate(ValidationNestingParentModel, obj);
-}
+import { Validation, Metadata } from '../../../src/index';
 
 export class ValidationNestingGrandchildModel {
 
@@ -24,7 +19,6 @@ export class ValidationNestingChildModel {
   @Metadata.type(ValidationNestingGrandchildModel)
   public ownKids: ValidationNestingGrandchildModel[];
 }
-
 
 export class ValidationNestingParentModel {
 

@@ -3,15 +3,15 @@ import { ReflectMetadata } from "../../metadata";
 import { Validator, ValidatorOut, isProvided } from "../model";
 
 /** Validates values are within a range. */
-export const RangeValidator: Validator = (trg, key) => {
+export const RangeValidator: Validator = (trg, key, proto) => {
 
   const value = (trg as any)[key];
   const retVal: ValidatorOut = { value, valid: true };
 
   if (isProvided(value)) {
 
-    const min = Reflect.getMetadata(ValidationKey.MIN, trg, key);
-    const max = Reflect.getMetadata(ValidationKey.MAX, trg, key);
+    const min = Reflect.getMetadata(ValidationKey.MIN, proto, key);
+    const max = Reflect.getMetadata(ValidationKey.MAX, proto, key);
     const hasMin = isProvided(min);
     const hasMax = isProvided(max);
     const isArray = Array.isArray(value);
@@ -19,9 +19,9 @@ export const RangeValidator: Validator = (trg, key) => {
     const allOk = tests.every(test => (!hasMin || test >= min) && (!hasMax || test <= max));
 
     if (!allOk) {
-      const name = ReflectMetadata.getDisplayName(trg, key);
-      const fmtMin = hasMin ? ReflectMetadata.getFormatted(trg, key, min) : min;
-      const fmtMax = hasMax ? ReflectMetadata.getFormatted(trg, key, max) : max;
+      const name = ReflectMetadata.getDisplayName(proto, key);
+      const fmtMin = hasMin ? ReflectMetadata.getFormatted(proto, key, min) : min;
+      const fmtMax = hasMax ? ReflectMetadata.getFormatted(proto, key, max) : max;
       const isDate = tests[0] instanceof Date;
       const compareLT = isDate ? 'before' : 'less than';
       const compareGT = isDate ? 'after' : 'greater than';

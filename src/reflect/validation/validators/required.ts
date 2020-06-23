@@ -3,26 +3,21 @@ import { ReflectMetadata } from "../../metadata";
 import { Validator, ValidatorOut, isProvided } from "../model";
 
 /** Validates required items. 0, 0n and false are allowed */
-export const RequiredValidator: Validator = (trg, key) => {
+export const RequiredValidator: Validator = (trg, key, proto) => {
 
   const value = (trg as any)[key];
   const retVal: ValidatorOut = { value, valid: true };
 
   if (!isProvided(value) || value === NaN) {
 
-    const required = Reflect.getMetadata(ValidationKey.REQUIRED, trg, key) === true;
+    const required = Reflect.getMetadata(ValidationKey.REQUIRED, proto, key) === true;
     if (required) {
       
-      const name = ReflectMetadata.getDisplayName(trg, key);
+      const name = ReflectMetadata.getDisplayName(proto, key);
       retVal.message = `${name} is required`;
     }
   }
 
   retVal.valid = !retVal.message;
-
-
-  console.log('REQUIRED VALIDATOR FOR:', key, 'prov?', isProvided(value), 'ersult', retVal);
-
-
   return retVal;
 }

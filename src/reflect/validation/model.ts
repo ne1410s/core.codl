@@ -1,4 +1,6 @@
-export declare type Validator = (trg: Object, key: string) => ValidatorOut;
+import { Ctor } from "../../types";
+
+export declare type Validator = (trg: Object, key: string, proto: any) => ValidatorOut;
 export declare type CValidator = (val: unknown, trg: Object) => string | boolean;
 
 export interface ValidatorOut {
