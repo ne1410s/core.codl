@@ -7,6 +7,7 @@ export const CustomValidator: Validator = (trg, key) => {
 
   const value = (trg as any)[key];
   const retVal: ValidatorOut = { value, valid: true };
+  
   const fn = Reflect.getMetadata(ValidationKey.CUSTOM, trg, key) as CValidator;
   const result = fn(value, trg);
   const hasCustomErrorMessage = (typeof result === 'string' && result.length != 0);

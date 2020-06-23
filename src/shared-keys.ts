@@ -3,6 +3,7 @@ export enum MetadataKey {
   DISPLAY_NAME  = 'ne-codl:metadata:display-name',
   DESCRIPTION   = 'ne-codl:metadata:description',
   FORMAT        = 'ne-codl:metadata:format',
+  TYPE          = 'ne-codl:metadata:type',
 }
 
 export enum ValidationKey {

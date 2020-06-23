@@ -19,5 +19,10 @@ export const RequiredValidator: Validator = (trg, key) => {
   }
 
   retVal.valid = !retVal.message;
+
+
+  console.log('REQUIRED VALIDATOR FOR:', key, 'prov?', isProvided(value), 'ersult', retVal);
+
+
   return retVal;
 }

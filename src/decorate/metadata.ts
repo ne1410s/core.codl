@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TypedPropertyDecorator } from '../types';
+import { TypedPropertyDecorator, Ctor } from '../types';
 import { MetadataKey } from '../shared-keys';
 
 /** Decorators for metadata purposes. */
@@ -26,6 +26,13 @@ export abstract class Metadata {
    * @param fn The format function.
    */
   public static readonly format = <T>(fn: (val: T) => string): TypedPropertyDecorator<T> => {
-    return Reflect.metadata(MetadataKey.FORMAT, fn);  
+    return Reflect.metadata(MetadataKey.FORMAT, fn);
+  }
+
+  /** Associates a child type on the parent in which it appears. */
+  public static readonly type = <T extends Object>(type: Ctor<T>): TypedPropertyDecorator<T | T[]> => {
+    return (trg, key) => {
+      Reflect.defineMetadata(`${MetadataKey.TYPE}:${key.toString()}`, type, trg);
+    };
   }
 }

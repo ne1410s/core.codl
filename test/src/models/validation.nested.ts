@@ -1,14 +1,37 @@
-import { Validation, Metadata } from '../../../src/index';
+import { Validation, Metadata, ReflectValidation, ValidationSummary } from '../../../src/index';
+import { MetadataKey } from '../../../src/shared-keys';
 
-export class ValidationNestedTestModel {
-
-  @Validation.minLength(1)
-  public myArr: ValidationNestedSubModel[];
+export function TestNesting(obj: Object): ValidationSummary {
+  return ReflectValidation.validate(ValidationNestingParentModel, obj);
 }
 
-export class ValidationNestedSubModel {
+export class ValidationNestingGrandchildModel {
 
-  @Metadata.displayName('Nested String')
+  @Metadata.displayName('La date')
   @Validation.required
-  public myString: string;
+  public myDate: Date;
+}
+
+export class ValidationNestingChildModel {
+
+  @Validation.required
+  @Validation.max(5)
+  public myNumMax5 = 5;
+
+  @Validation.required
+  public doods: string;
+
+  @Metadata.type(ValidationNestingGrandchildModel)
+  public ownKids: ValidationNestingGrandchildModel[];
+}
+
+
+export class ValidationNestingParentModel {
+
+  @Validation.required
+  @Metadata.type(ValidationNestingChildModel)
+  public child: ValidationNestingChildModel;
+
+  @Validation.required
+  public num: number;
 }

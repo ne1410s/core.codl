@@ -1,4 +1,5 @@
 export interface Ctor<T> { new (...args: any[]): T };
+//export interface CtorNoParams<T> { new (): T };
 
 export declare type RecordKey = string | symbol;
 export declare type FunctionDecorator = (trg: Object, key: RecordKey, desc: PropertyDescriptor) => void;

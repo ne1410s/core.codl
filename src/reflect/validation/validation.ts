@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { ValidationKey } from '../../shared-keys';
+import { Ctor } from '../../types';
+import { ValidationKey, MetadataKey } from '../../shared-keys';
 import { Validator, ValidatorOut } from './model';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
@@ -10,10 +11,16 @@ import { LengthRangeValidator } from './validators/length-range';
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
 
-  public static validate(target: Object): ValidationSummary {
+  public static validate<T extends Object>(type: Ctor<T>, target: Object): ValidationSummary {
     if (!target) throw new TypeError('No target provided');
     const validators = this.getValidators();
-    const results = ReflectValidation.processAllRecursively(validators, target);
+    const results = ReflectValidation.processAllRecursively(validators, type, target);
+
+
+    //console.log('---------------------------------------');
+    //console.log(results);
+    throw new Error('dddddssssssaaaaaaf');
+
     const retVal: ValidationSummary = { valid: results.every(r => r.valid) };
     if (!retVal.valid) {
       retVal.errors = results.filter(r => !r.valid).reduce((acc, cur) => {
@@ -60,26 +67,43 @@ export abstract class ReflectValidation {
   }
 
   /** Performs all supported validations for all decorated properties. */
-  private static processAllRecursively(dupeDefs: ValidatorDef[], trg: Object, pfx: string = ''): ValidationResult[] {
-
-    const deDuped = Reflect.getMetadataKeys(trg).map(t => `${t}`).reduce((acc, cur) => {
-      const raw = dupeDefs.filter(dg => cur.indexOf(dg.meta + ':') === 0)[0];
-      const key = cur.replace(raw.meta + ':', '');
-      const prior = acc.filter(a => a.key === key && a.fn === raw.fn)[0];
-      if (prior) prior.tests.push(raw.test);
-      else acc.push({ key: key, fn: raw.fn, tests: [raw.test] });
+  private static processAllRecursively<T>(dupeDefs: ValidatorDef[], type: Ctor<T>, trg: Object, pfx: string = ''): ValidationResult[] {  
+    
+    const protoKeys = Reflect.getMetadataKeys(type.prototype).map(k => `${k}`);
+    
+    const deDuped = protoKeys.reduce((acc, cur) => {
+      const valDef = dupeDefs.filter(dg => cur.indexOf(dg.meta + ':') === 0)[0];
+      if (valDef) {
+        const key = cur.replace(valDef.meta + ':', '');
+        const prior = acc.filter(a => a.key === key && a.fn === valDef.fn)[0];
+        if (prior) prior.tests.push(valDef.test);
+        else acc.push({ key: key, fn: valDef.fn, tests: [valDef.test] });
+      }
       return acc;
-    }, [] as ValidationDef[]);
+    }, [] as ValidationInstruction[]);
+    
+
+    //console.log('IMM INSTRUCTIONS FOR', pfx, '=', deDuped);
 
     const retVal = deDuped.map(d => ({ key: pfx ? pfx + '.' + d.key : d.key, tests: d.tests, ...d.fn(trg, d.key) }));
 
-    Object.getOwnPropertyNames(trg)
-      .map(key => ({ key, value: (trg as any)[key] }))
-      .filter(kvp => kvp.value instanceof Object)
-      .forEach(kvp => {
-        if (!isNaN(parseInt(kvp.key))) kvp.key = `[${kvp.key}]`;
-        retVal.push(...this.processAllRecursively(dupeDefs, kvp.value, pfx + kvp.key));
+
+    protoKeys.filter(k => k.indexOf(`${MetadataKey.TYPE}:`) === 0)
+      .forEach(tk => {
+        const subkey = tk.replace(`${MetadataKey.TYPE}:`, '');
+        const subtype = Reflect.getMetadata(tk, type.prototype);
+        const subobj = (trg as any)[subkey] || {};
+        subobj.prototype = subtype.prototype;
+        retVal.push(...this.processAllRecursively(dupeDefs, subtype, subobj, pfx + '.' + subkey));
       });
+
+    // Object.getOwnPropertyNames(trg)
+    //   .map(key => ({ key, value: (trg as any)[key] }))
+    //   .filter(kvp => kvp.value instanceof Object)
+    //   .forEach(kvp => {
+    //     if (!isNaN(parseInt(kvp.key))) kvp.key = `[${kvp.key}]`;
+    //     retVal.push(...this.processAllRecursively(dupeDefs, kvp.value, pfx + kvp.key));
+    //   });
 
     return retVal;
   }
@@ -96,11 +120,10 @@ interface ValidatorDef {
   meta: ValidationKey;
 }
 
-interface ValidationDef {
+interface ValidationInstruction {
   key: string;
   fn: Validator;
   tests: string[];
-
 }
 
 interface ValidationResult extends ValidatorOut {
