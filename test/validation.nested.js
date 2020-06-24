@@ -8,7 +8,6 @@ describe('@Validation (nested)', () => {
     inst.child = { doods: 'ss', ownKids: [{ myDate: new Date() }, null, {}] };
     let summary = ne_codl.ReflectValidation.validate(inst);
     expect(summary.valid).to.be.false;
-    console.log(summary.errors);
   });
 
   it('type data supplied separately', () => {
