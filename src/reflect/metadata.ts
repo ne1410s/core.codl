@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { MetadataKey } from "../shared-keys";
-import { RecordKey } from "../types";
+import { MetadataKey } from '../mdkeys';
+import { RecordKey } from '../types';
 
 export abstract class ReflectMetadata {
 

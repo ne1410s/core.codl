@@ -1,4 +1,4 @@
-
+/** Metadata keys. */
 export enum MetadataKey {
   DISPLAY_NAME  = 'ne-codl:metadata:display-name',
   DESCRIPTION   = 'ne-codl:metadata:description',
@@ -6,6 +6,7 @@ export enum MetadataKey {
   TYPE          = 'ne-codl:metadata:type',
 }
 
+/** Validation keys. */
 export enum ValidationKey {
   REQUIRED      = 'ne-codl:validation:required',
   MIN_LENGTH    = 'ne-codl:validation:min-length',

@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import { Ctor } from '../../types';
-import { ValidationKey, MetadataKey } from '../../shared-keys';
-import { Validator, ValidatorOut } from './model';
+import { ValidationKey, MetadataKey } from '../../mdkeys';
+import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstruction } from './models';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
-import { CustomValidator } from './validators/custom';
+import { CustValidator } from './validators/custom';
 import { LengthRangeValidator } from './validators/length-range';
 
 /** Reflects validation decoration. */
@@ -17,17 +17,15 @@ export abstract class ReflectValidation {
     const validators = this.getValidators();
     const tests = ReflectValidation.buildTestPlan(validators, proto, target);
     const results: ValidationResult[] = tests.map(t => {
-      const output = t.fn(t.trg, t.key, t.proto);
-      const key = t.pfx ? `${t.pfx}.${t.key}` : t.key;
-      return { key, tests: t.tests, ...output };
+      return { navkey: t.navkey, tests: t.tests, ...t.fn(t.trg, t.key, t.proto) };
     });
     const retVal: ValidationSummary = { valid: results.every(r => r.valid) };
     if (!retVal.valid) {
       retVal.errors = results.filter(r => !r.valid).reduce((acc, cur) => {
-        acc[cur.key] = acc[cur.key] || [];
-        acc[cur.key].push(cur.message);
+        acc[cur.navkey] = acc[cur.navkey] || [];
+        acc[cur.navkey].push(cur.message);
         return acc;
-      }, {} as Record<string, string[]>);
+      }, {} as Record<string, string[]>)
     }
 
     return retVal;
@@ -59,7 +57,7 @@ export abstract class ReflectValidation {
         
       case ValidationKey.REQUIRED: return RequiredValidator;
       case ValidationKey.REGEX: return RegexValidator;
-      case ValidationKey.CUSTOM: return CustomValidator;
+      case ValidationKey.CUSTOM: return CustValidator;
 
       default:
         throw new RangeError(`No validator implemented for ${key}`);
@@ -74,8 +72,9 @@ export abstract class ReflectValidation {
         if (valDef) {
           const key = cur.replace(valDef.meta + ':', '');
           const prior = acc.filter(a => a.key === key && a.fn === valDef.fn)[0];
+          const navkey = pfx ? `${pfx}.${key}` : key;
           if (prior) prior.tests.push(valDef.test);
-          else acc.push({ pfx, key, trg, proto, fn: valDef.fn, tests: [valDef.test] });
+          else acc.push({ navkey, key, trg, proto, fn: valDef.fn, tests: [valDef.test] });
         }
         else if (cur.indexOf(`${MetadataKey.TYPE}:`) === 0) {
           const subkey = cur.replace(`${MetadataKey.TYPE}:`, '');
@@ -92,31 +91,7 @@ export abstract class ReflectValidation {
           }
         }
         return acc;
-      }, [] as ValidationInstruction[]);
+      }, [] as ValidationInstruction[])
+      .sort((a, b) => a.navkey.split('.').length - b.navkey.split('.').length)
   }
-}
-
-export interface ValidationSummary {
-  valid: boolean;
-  errors?: Record<string, string[]>
-}
-
-interface ValidatorDef {
-  fn: Validator;
-  test: string;
-  meta: ValidationKey;
-}
-
-interface ValidationInstruction {
-  pfx: string;
-  key: string;
-  trg: Object;
-  proto: any;
-  fn: Validator;
-  tests: string[];
-}
-
-interface ValidationResult extends ValidatorOut {
-  key: string;
-  tests: string[];
 }

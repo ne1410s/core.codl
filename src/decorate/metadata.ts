@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { TypedPropertyDecorator, Ctor } from '../types';
-import { MetadataKey } from '../shared-keys';
+import { MetadataKey } from '../mdkeys';
 
 /** Decorators for metadata purposes. */
 export abstract class Metadata {

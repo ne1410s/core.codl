@@ -1,12 +1,13 @@
-import { ValidationKey } from "../../../shared-keys";
-import { ReflectMetadata } from "../../metadata";
-import { Validator, ValidatorOut, isProvided } from "../model";
+import { isProvided } from '../../../types';
+import { ValidationKey } from '../../../mdkeys';
+import { ReflectMetadata } from '../../metadata';
+import { Validator, ValidatorOut } from '../models';
 
 /** Validates values are within a range. */
 export const RangeValidator: Validator = (trg, key, proto) => {
 
   const value = (trg as any)[key];
-  const retVal: ValidatorOut = { value, valid: true };
+  const retVal: ValidatorOut = { key, value, valid: true };
 
   if (isProvided(value)) {
 

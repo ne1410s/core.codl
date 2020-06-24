@@ -1,7 +1,6 @@
 import 'reflect-metadata';
-import { ValidationKey } from '../shared-keys';
-import { TypedPropertyDecorator } from '../types';
-import { CValidator } from '../reflect/validation/model';
+import { TypedPropertyDecorator, CustomValidator } from '../types';
+import { ValidationKey } from '../mdkeys';
 
 /** Decorators for validation purposes. */
 export abstract class Validation {
@@ -103,7 +102,7 @@ export abstract class Validation {
    * is used. Else if it returns a string, this string is used as the message,
    * with null or empty strings taken to indicate that the value is valid). 
    */
-  public static readonly custom: <T>(fn: CValidator) => TypedPropertyDecorator<T> = fn => {
+  public static readonly custom: <T>(fn: CustomValidator) => TypedPropertyDecorator<T> = fn => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.CUSTOM}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.CUSTOM, fn, trg, key);

@@ -1,6 +1,7 @@
-import { ValidationKey } from "../../../shared-keys";
-import { ReflectMetadata } from "../../metadata";
-import { Validator, ValidatorOut, isProvided } from "../model";
+import { isProvided } from '../../../types';
+import { ValidationKey } from '../../../mdkeys';
+import { ReflectMetadata } from '../../metadata';
+import { Validator, ValidatorOut } from '../models';
 
 /** Validates regex using string representation of the member. */
 export const RegexValidator: Validator = (trg, key, proto) => {
