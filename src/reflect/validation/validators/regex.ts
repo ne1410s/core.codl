@@ -7,7 +7,7 @@ import { Validator, ValidatorOut } from '../models';
 export const RegexValidator: Validator = (trg, key, proto) => {
 
   const value = (trg as any)[key];
-  const retVal: ValidatorOut = { value, valid: true };
+  const retVal: ValidatorOut = { key, value, valid: true };
   
   if (isProvided(value)) {
 
