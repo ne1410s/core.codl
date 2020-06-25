@@ -17,6 +17,7 @@
     "build": "npm run clean && npx rollup -c",
     "test": "npm run is-pretty && npx rollup -c rollup.test.config.js && mocha --exit",
     "publish-local": "npm run test && npm run build && npm pack",
+    "publish-patch": "npm run test && npm run build && npm version patch && npm publish --access public",
     "publish-minor": "npm run test && npm run build && npm version minor && npm publish --access public",
     "publish-major": "npm run test && npm run build && npm version major && npm publish --access public"
   },
