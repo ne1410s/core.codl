@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Metadata', () => {
-  
   it('@description', () => {
     const sut = new ne_codl.MetadataTestModel('hello, world');
     expect(sut.testMe).to.be.undefined;

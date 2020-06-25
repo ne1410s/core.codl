@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Interception', () => {
-  
   it('@initial', () => {
     const sut = new ne_codl.InterceptionTestModel('hello, world');
     expect(sut instanceof ne_codl.InterceptionTestModel).to.be.true;
@@ -18,5 +17,4 @@ describe('@Interception', () => {
     const sut = new ne_codl.InterceptionTestModel('me');
     expect(sut.format2('you')).to.equal('fmt2: you');
   });
-
 });

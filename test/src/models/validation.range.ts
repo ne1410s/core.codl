@@ -1,8 +1,7 @@
 import { Validation, Metadata } from '../../../src/index';
 
 export class ValidationRangeTestModel {
-
-  @Metadata.format((v: Date) => `${v.getDate()}/${v.getMonth()+1}/${v.getFullYear()}`)
+  @Metadata.format((v: Date) => `${v.getDate()}/${v.getMonth() + 1}/${v.getFullYear()}`)
   @Validation.min(new Date(2000, 1, 1))
   public myDate: Date = new Date(2002, 2, 14);
 

@@ -1,12 +1,15 @@
 import { Validation } from '../../../src/index';
 
 export class ValidationRequiredTestModel {
+  @Validation.required
+  public get myNullAccessor(): number {
+    return null;
+  }
 
   @Validation.required
-  public get myNullAccessor(): number { return null; }
-
-  @Validation.required
-  public get myPresentAccessor(): number { return 33; }
+  public get myPresentAccessor(): number {
+    return 33;
+  }
 
   @Validation.required
   public myString = '';

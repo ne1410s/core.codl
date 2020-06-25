@@ -4,15 +4,11 @@ import pkg from './package.json';
 // UMD build (for browsers)
 export default {
   input: 'src/index.ts',
-  external: [
-    'reflect-metadata'
-  ],
+  external: ['reflect-metadata'],
   output: {
     name: pkg.displayName,
     file: pkg.browser,
-    format: 'umd'
+    format: 'umd',
   },
-  plugins: [
-    typescript()
-  ]
+  plugins: [typescript()],
 };

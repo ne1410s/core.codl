@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.range', () => {
-  
   it('all ok -> valid', () => {
     const sut = new ne_codl.ValidationRangeTestModel();
     sut.myNumber = 28;
@@ -57,5 +56,4 @@ describe('@Validation.range', () => {
     expect(arrErrs.length).to.equal(1);
     expect(arrErrs[0]).to.equal('myStrArr cannot contain fewer than 3 items');
   });
-
 });

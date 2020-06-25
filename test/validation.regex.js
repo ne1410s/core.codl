@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.regex', () => {
-  
   it('bad format -> invalid', () => {
     const sut = new ne_codl.ValidationRegexTestModel();
     let summary = ne_codl.ReflectValidation.validate(sut);
@@ -47,5 +46,4 @@ describe('@Validation.regex', () => {
     expect(arrErrs.length).to.equal(1);
     expect(arrErrs[0]).to.equal('myVals contains an invalid item');
   });
-
 });

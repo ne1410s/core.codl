@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation (summary)', () => {
-  
   it('decorated, invalid -> summary invalid, no display name', () => {
     const sut = new ne_codl.ValidationSummaryTestModel();
     expect(sut.myString).to.be.undefined;
@@ -31,5 +30,4 @@ describe('@Validation (summary)', () => {
     expect(summary.valid).to.be.false;
     expect(summary.errors['myBool'][0]).to.equal('My Boolean is required');
   });
-
 });

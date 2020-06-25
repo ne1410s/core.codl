@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.required', () => {
-  
   it('unset boolean -> invalid', () => {
     const sut = new ne_codl.ValidationRequiredTestModel();
     let summary = ne_codl.ReflectValidation.validate(sut);
@@ -75,5 +74,4 @@ describe('@Validation.required', () => {
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.errors['myPresentAccessor']).to.be.undefined;
   });
-
 });

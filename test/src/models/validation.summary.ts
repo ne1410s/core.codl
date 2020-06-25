@@ -1,7 +1,6 @@
 import { Validation, Metadata } from '../../../src/index';
 
 export class ValidationSummaryTestModel {
-
   @Validation.required
   public myString: string;
 

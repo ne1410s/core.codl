@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.custom', () => {
-  
   it('generic, formatted error message', () => {
     const sut = new ne_codl.ValidationCustomTestModel();
     let summary = ne_codl.ReflectValidation.validate(sut);
@@ -29,5 +28,4 @@ describe('@Validation.custom', () => {
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.true;
   });
-
 });

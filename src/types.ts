@@ -1,30 +1,41 @@
 /** A constructor. */
-export interface Ctor<T> { new (...args: any[]): T };
+export interface Ctor<T> {
+  new (...args: any[]): T;
+}
 
 /** A record key. */
 export declare type RecordKey = string | symbol;
 
 /** Decorator for a function. */
-export declare type FunctionDecorator = (trg: Object, key: RecordKey, desc: PropertyDescriptor) => void;
+export declare type FunctionDecorator = (
+  trg: Object,
+  key: RecordKey,
+  desc: PropertyDescriptor
+) => void;
 
 /** Decorator for a property accessor of a given type. */
-export declare type TypedAccessorDecorator<P> =
-  <K extends RecordKey, T extends Record<K, P>>
-    (target: T, key: K, desc: TypedPropertyDescriptor<P>) => void;
+export declare type TypedAccessorDecorator<P> = <K extends RecordKey, T extends Record<K, P>>(
+  target: T,
+  key: K,
+  desc: TypedPropertyDescriptor<P>
+) => void;
 
 /** Decorator for a property or field of a given type. */
-export declare type TypedPropertyDecorator<P> =
-  <K extends RecordKey, T extends Record<K, P>>
-    (target: T, key: K) => void;
+export declare type TypedPropertyDecorator<P> = <K extends RecordKey, T extends Record<K, P>>(
+  target: T,
+  key: K
+) => void;
 
 /** Decorator for a function argument of a given type. */
-export declare type TypedArgumentDecorator<P> =
-  <K extends RecordKey, T extends Record<K, P>>
-    (target: T, key: K, idx: number) => void;
+export declare type TypedArgumentDecorator<P> = <K extends RecordKey, T extends Record<K, P>>(
+  target: T,
+  key: K,
+  idx: number
+) => void;
 
-/** 
+/**
  * Whether a value is considered as having been provided.
- * Certain 'falsy' values pass, including 0, 0n, NaN. 
+ * Certain 'falsy' values pass, including 0, 0n, NaN.
  */
 export const isProvided = (v: unknown) => v !== null && v !== undefined && v !== '';
 

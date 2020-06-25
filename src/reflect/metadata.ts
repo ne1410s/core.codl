@@ -3,7 +3,6 @@ import { MetadataKey } from '../mdkeys';
 import { RecordKey } from '../types';
 
 export abstract class ReflectMetadata {
-
   /**
    * Retrieves the display name if provided (else the property key).
    * @param target The parent object.
@@ -11,7 +10,7 @@ export abstract class ReflectMetadata {
    */
   public static readonly getDisplayName = (target: Object, key: RecordKey): string => {
     return Reflect.getMetadata(MetadataKey.DISPLAY_NAME, target, key) || key;
-  }
+  };
 
   /**
    * Retrieves the description.
@@ -20,7 +19,7 @@ export abstract class ReflectMetadata {
    */
   public static readonly getDescription = (target: Object, key: RecordKey): string => {
     return Reflect.getMetadata(MetadataKey.DESCRIPTION, target, key);
-  }
+  };
 
   /**
    * Retrieves the formatted value if format provided (else the raw value).
@@ -29,11 +28,15 @@ export abstract class ReflectMetadata {
    * @param other If supplied, the formatter is applied to this value, rather
    * than that of the property.
    */
-  public static readonly getFormatted = (target: Object, key: RecordKey, other?: unknown): string => {
+  public static readonly getFormatted = (
+    target: Object,
+    key: RecordKey,
+    other?: unknown
+  ): string => {
     const fn = Reflect.getMetadata(MetadataKey.FORMAT, target, key);
     const value = other != null ? other : (target as any)[key];
     return fn ? fn(value) : value;
-  }
+  };
 
   /**
    * Retrieves type information for the specified member, by instantiating a new
@@ -44,5 +47,5 @@ export abstract class ReflectMetadata {
   public static readonly getPrototype = <T>(target: T, key: RecordKey): T => {
     const type = Reflect.getMetadata(MetadataKey.TYPE, target, key);
     return type ? new type() : {};
-  }
+  };
 }

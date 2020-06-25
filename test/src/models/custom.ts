@@ -1,7 +1,6 @@
 import { Custom } from '../decorators/custom';
 
 export class CustomTestModel {
-
   @Custom.stringGetter()
   public get testString(): string {
     return 'bonjour';
@@ -16,13 +15,12 @@ export class CustomTestModel {
   public testMe: boolean;
 
   public testFn(
+    @Custom.stringArg('something dynamic')
+    param1: string,
 
-      @Custom.stringArg('something dynamic')
-      param1: string,
-      
-      @Custom.anyArg
-      param2: Date): boolean {
-    
+    @Custom.anyArg
+    param2: Date
+  ): boolean {
     return false;
   }
 }

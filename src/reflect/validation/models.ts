@@ -1,4 +1,4 @@
-import { ValidationKey } from "../../mdkeys";
+import { ValidationKey } from '../../mdkeys';
 
 export interface ValidatorDef {
   fn: Validator;
@@ -31,5 +31,5 @@ export interface ValidationResult extends ValidatorOut {
 
 export interface ValidationSummary {
   valid: boolean;
-  errors?: Record<string, string[]>
+  errors?: Record<string, string[]>;
 }
