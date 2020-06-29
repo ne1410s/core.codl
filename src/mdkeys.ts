@@ -3,7 +3,7 @@ export enum MetadataKey {
   DISPLAY_NAME = 'ne-codl:metadata:display-name',
   DESCRIPTION = 'ne-codl:metadata:description',
   FORMAT = 'ne-codl:metadata:format',
-  TYPE = 'ne-codl:metadata:type',
+  MODEL = 'ne-codl:metadata:model',
 }
 
 /** Validation keys. */
@@ -14,5 +14,6 @@ export enum ValidationKey {
   MIN = 'ne-codl:validation:min',
   MAX = 'ne-codl:validation:max',
   REGEX = 'ne-codl:validation:regex',
+  PRIMITIVE = 'ne-codl:validation:type',
   CUSTOM = 'ne-codl:validation:custom',
 }

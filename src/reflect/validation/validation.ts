@@ -7,6 +7,7 @@ import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
 import { CustValidator } from './validators/custom';
 import { LengthRangeValidator } from './validators/length-range';
+import { PrimitiveValidator } from './validators/primitive';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -54,6 +55,8 @@ export abstract class ReflectValidation {
         return RequiredValidator;
       case ValidationKey.REGEX:
         return RegexValidator;
+      case ValidationKey.PRIMITIVE:
+        return PrimitiveValidator;
       case ValidationKey.CUSTOM:
         return CustValidator;
 
@@ -87,8 +90,8 @@ export abstract class ReflectValidation {
               fn: valDef.fn,
               tests: [valDef.test],
             });
-        } else if (cur.indexOf(`${MetadataKey.TYPE}:`) === 0) {
-          const subkey = cur.replace(`${MetadataKey.TYPE}:`, '');
+        } else if (cur.indexOf(`${MetadataKey.MODEL}:`) === 0) {
+          const subkey = cur.replace(`${MetadataKey.MODEL}:`, '');
           const subproto = Reflect.getMetadata(cur, proto).prototype;
           const subobj = ((trg as any) || {})[subkey];
           if (Array.isArray(subobj)) {

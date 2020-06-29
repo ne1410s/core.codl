@@ -28,12 +28,12 @@ export abstract class Metadata {
     return Reflect.metadata(MetadataKey.FORMAT, fn);
   };
 
-  /** Associates a child type on the parent in which it appears. */
-  public static readonly type = <T extends Object>(
-    type: Ctor<T>
+  /** Associates a child's prototype data on the parent in which it appears. */
+  public static readonly model = <T extends Object>(
+    ctor: Ctor<T>
   ): TypedPropertyDecorator<T | T[]> => {
     return (trg, key) => {
-      Reflect.defineMetadata(`${MetadataKey.TYPE}:${key.toString()}`, type, trg);
+      Reflect.defineMetadata(`${MetadataKey.MODEL}:${key.toString()}`, ctor, trg);
     };
   };
 }

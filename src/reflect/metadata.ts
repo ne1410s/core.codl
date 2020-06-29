@@ -37,15 +37,4 @@ export abstract class ReflectMetadata {
     const value = other != null ? other : (target as any)[key];
     return fn ? fn(value) : value;
   };
-
-  /**
-   * Retrieves type information for the specified member, by instantiating a new
-   * instance from metadata. If no such metadata found, returns a blank object.
-   * @param target The parent object.
-   * @param key The property key.
-   */
-  public static readonly getPrototype = <T>(target: T, key: RecordKey): T => {
-    const type = Reflect.getMetadata(MetadataKey.TYPE, target, key);
-    return type ? new type() : {};
-  };
 }

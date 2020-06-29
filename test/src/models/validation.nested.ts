@@ -14,13 +14,13 @@ export class ValidationNestingChildModel {
   @Validation.required
   public doods: string;
 
-  @Metadata.type(ValidationNestingGrandchildModel)
+  @Metadata.model(ValidationNestingGrandchildModel)
   public ownKids: ValidationNestingGrandchildModel[];
 }
 
 export class ValidationNestingParentModel {
   @Validation.required
-  @Metadata.type(ValidationNestingChildModel)
+  @Metadata.model(ValidationNestingChildModel)
   public child: ValidationNestingChildModel;
 
   @Validation.required
