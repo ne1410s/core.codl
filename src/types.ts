@@ -6,9 +6,6 @@ export interface Ctor<T> {
 /** A record key. */
 export declare type RecordKey = string | symbol;
 
-/** 'Primitive' types, or an approximation of. */
-export declare type Primitive = string | number | boolean | Date;
-
 /** Decorator for a function. */
 export declare type FunctionDecorator = (
   trg: Object,

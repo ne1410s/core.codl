@@ -14,6 +14,9 @@ export enum ValidationKey {
   MIN = 'ne-codl:validation:min',
   MAX = 'ne-codl:validation:max',
   REGEX = 'ne-codl:validation:regex',
-  PRIMITIVE = 'ne-codl:validation:type',
+  TYPE_BOOLEAN = 'ne-codl:validation:type-boolean',
+  TYPE_DATE = 'ne-codl:validation:type-date',
+  TYPE_INTEGER = 'ne-codl:validation:type-integer',
+  TYPE_NUMBER = 'ne-codl:validation:type-number',
   CUSTOM = 'ne-codl:validation:custom',
 }

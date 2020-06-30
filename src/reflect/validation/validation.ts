@@ -5,9 +5,8 @@ import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstructio
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
-import { CustValidator } from './validators/custom';
 import { LengthRangeValidator } from './validators/length-range';
-import { PrimitiveValidator } from './validators/primitive';
+import { CustValidator } from './validators/custom';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -55,8 +54,14 @@ export abstract class ReflectValidation {
         return RequiredValidator;
       case ValidationKey.REGEX:
         return RegexValidator;
-      case ValidationKey.PRIMITIVE:
-        return PrimitiveValidator;
+      case ValidationKey.TYPE_BOOLEAN:
+        return BooleanValidator;
+      case ValidationKey.TYPE_DATE:
+        return DateValidator;
+      case ValidationKey.TYPE_INTEGER:
+        return IntegerValidator;
+      case ValidationKey.TYPE_NUMBER:
+        return NumberValidator;
       case ValidationKey.CUSTOM:
         return CustValidator;
 

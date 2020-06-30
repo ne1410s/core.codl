@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TypedPropertyDecorator, CustomValidator, Primitive } from '../types';
+import { TypedPropertyDecorator, CustomValidator } from '../types';
 import { ValidationKey } from '../mdkeys';
 
 /** Decorators for validation purposes. */
@@ -103,15 +103,6 @@ export abstract class Validation {
       Reflect.defineMetadata(ValidationKey.REGEX, regex, trg, key);
     };
   };
-
-
-  
-  public static readonly primitive: TypedPropertyDecorator<Primitive> = (trg, key) => {
-    Reflect.defineMetadata(`${ValidationKey.PRIMITIVE}:${key.toString()}`, key, trg);
-    Reflect.defineMetadata(ValidationKey.PRIMITIVE, '', trg, key);
-  };
-
-
 
   /**
    * Associates a property with a custom validator. Unlike most other validation
