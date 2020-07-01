@@ -53,6 +53,9 @@ export abstract class Validation {
     lBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (lBound) => {
     return (trg, key) => {
+
+      // TODO: Add typekey to trg, according to lBound type
+
       Reflect.defineMetadata(`${ValidationKey.MIN}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.MIN, lBound, trg, key);
     };
@@ -68,6 +71,9 @@ export abstract class Validation {
     uBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (uBound) => {
     return (trg, key) => {
+
+      // TODO: Add typekey to trg, according to uBound type
+
       Reflect.defineMetadata(`${ValidationKey.MAX}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.MAX, uBound, trg, key);
     };
@@ -83,6 +89,9 @@ export abstract class Validation {
     lBound: T,
     uBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (lBound, uBound) => {
+
+    // TODO: Add typekey to trg, according to lBound type
+
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.MIN}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(`${ValidationKey.MAX}:${key.toString()}`, key, trg);

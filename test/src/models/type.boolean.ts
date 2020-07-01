@@ -1,12 +1,12 @@
 import { Metadata, Type, Validation } from '../../../src/index';
 
-export class ValidationBooleanTestModel {
+export class TypeBooleanTestModel {
 
-  @Metadata.displayName('My Num')
+  @Metadata.displayName('My Bool')
   @Validation.required
   @Type.boolean
-  public myNumber: boolean;
+  public myBoolean: boolean;
 
   @Type.boolean
-  public myVals: string[];
+  public myBooleans: boolean[];
 }

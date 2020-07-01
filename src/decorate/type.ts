@@ -9,7 +9,7 @@ export abstract class Type {
     Reflect.defineMetadata(`${ValidationKey.TYPE_BOOLEAN}:${key.toString()}`, key, trg);
   };
 
-  public static readonly date: TypedPropertyDecorator<Date | string | Array<Date | string>> = (trg, key) => {
+  public static readonly date: TypedPropertyDecorator<Date | number | string | Array<Date | number | string>> = (trg, key) => {
     Reflect.defineMetadata(`${ValidationKey.TYPE_DATE}:${key.toString()}`, key, trg);
   };
 

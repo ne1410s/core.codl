@@ -12,7 +12,7 @@ export const RegexValidator: Validator = (trg, key, proto) => {
     const regex = new RegExp(Reflect.getMetadata(ValidationKey.REGEX, proto, key));
     const isArray = Array.isArray(value);
     const tests: any[] = isArray ? value : [value];
-    const allOk = tests.every((test) => regex.test(test.toString()));
+    const allOk = tests.every((test) => regex.test(`${test}`));
 
     if (!allOk) {
       const name = ReflectMetadata.getDisplayName(proto, key);
