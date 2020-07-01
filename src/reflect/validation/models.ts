@@ -15,6 +15,18 @@ export interface ValidationInstruction {
   tests: string[];
 }
 
+export interface ObjectTest {
+  navkey: string;
+  trg: Object;
+  proto: any;
+  props: PropertyTest[];
+}
+
+export interface PropertyTest {
+  key: string;
+  fns: Validator[];
+}
+
 export declare type Validator = (trg: Object, key: string, proto: any) => ValidatorOut;
 
 export interface ValidatorOut {
@@ -26,7 +38,6 @@ export interface ValidatorOut {
 
 export interface ValidationResult extends ValidatorOut {
   navkey: string;
-  tests: string[];
 }
 
 export interface ValidationSummary {

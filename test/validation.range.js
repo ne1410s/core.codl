@@ -57,21 +57,21 @@ describe('@Validation.range', () => {
   //   expect(arrErrs[0]).to.equal('myStrArr cannot contain fewer than 3 items');
   // });
 
-  it('bad number -> invalid (skip range check)', () => {
-    const sut = new ne_codl.ValidationRangeTestModel();
-    sut.myNumber = 28;
-    sut.myNumberMax2 = new Date();
-    let summary = ne_codl.ReflectValidation.validate(sut);
-    expect(summary.valid).to.be.false;
-    expect(summary.errors['myNumberMax2']).to.not.be.undefined;
+  // it('bad number -> invalid (skip range check)', () => {
+  //   const sut = new ne_codl.ValidationRangeTestModel();
+  //   sut.myNumber = 28;
+  //   sut.myNumberMax2 = new Date();
+  //   let summary = ne_codl.ReflectValidation.validate(sut);
+  //   expect(summary.valid).to.be.false;
+  //   expect(summary.errors['myNumberMax2']).to.not.be.undefined;
 
 
-    console.log(summary.errors['myNumberMax2']);
+  //   console.log(summary.errors['myNumberMax2']);
 
 
-    expect(summary.errors['myNumberMax2'].length).to.equal(1);
-    expect(summary.errors['myNumberMax2'][0]).to.equal('My Num is not a valid number');
-  });
+  //   expect(summary.errors['myNumberMax2'].length).to.equal(1);
+  //   expect(summary.errors['myNumberMax2'][0]).to.equal('My Num is not a valid number');
+  // });
 
   // it('bad date -> invalid (skip range check)', () => {
   //   const sut = new ne_codl.ValidationRangeTestModel();

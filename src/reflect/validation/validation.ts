@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Ctor } from '../../types';
 import { ValidationKey, MetadataKey } from '../../mdkeys';
-import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstruction, Validator } from './models';
+import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstruction, Validator, ObjectTest, PropertyTest } from './models';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
@@ -21,8 +21,13 @@ export abstract class ReflectValidation {
     if (!proto) throw new TypeError('No type data could be found');
 
     const checks = this.getValidators();
-    const tests = this.getTestInstructions(checks, proto, target);
-    const results = this.executeTestPlan(tests);
+    const rawTests = this.getTestInstructions(checks, proto, target);
+    const testPlan = this.prepareTestPlan(rawTests);
+    
+    // TODO: pass test plan to the below method
+    // (and refactoring it to bail out of 'terminal' tests that fail)
+
+    const results = this.executeTestPlan(rawTests);
     const retVal = this.summarise(results);
 
     return retVal;
@@ -118,43 +123,36 @@ export abstract class ReflectValidation {
         }
         return acc;
       }, [] as ValidationInstruction[])
-      .sort((a, b) => { // sort by: depth > key > validator
+      .sort((a, b) => { // sort by: depth > objname > keyname > validator
         const aNesting = a.navkey.split('.').length;
         const bNesting = b.navkey.split('.').length;
         if (aNesting > bNesting) return 1;
         else if (aNesting < bNesting) return -1;
         else {
-          if (a.key > b.key) return 1;
-          else if (a.key < b.key) return -1;
+          if (a.navkey > b.navkey) return 1;
+          else if (a.navkey < b.navkey) return -1;
           return fnScorer(b) - fnScorer(a);
         }
       });
   }
 
-  // TODO: 'prepareTestPlan': ValInstr[] --> TestPlan
-  /*
-
-
-[
-  {
-    trg: {},
-    proto: {},
-    props: [
-      { key, navkey, fns: [] },  <-- for each fn, if fails & is terminal, the tests are no longer conducted for the key
-      { key, navkey, fns: [] }
-    ]
-  },  
-  {
-    trg: {},
-    proto: {},
-    props: [
-      { key, navkey, fns: [] }
-    ]
-  },
-]
-
-
-  */
+  /** Reduces a full set of instructions into a condensed test plan. */
+  private static prepareTestPlan(instr: ValidationInstruction[]): ObjectTest[] {
+    return instr.reduce((acc, cur) => {
+      const lastDot = cur.navkey.lastIndexOf('.');
+      const objKey = lastDot === -1 ? '' : cur.navkey.substring(0, lastDot);
+      const priorObj = acc.filter(a => a.navkey === objKey)[0];
+      const workObj: ObjectTest = priorObj || { 
+        navkey: objKey, proto: cur.proto, trg: cur.trg, props: []
+      };
+      const priorProp = workObj.props.filter(p => p.key === cur.key)[0];
+      const workProp: PropertyTest = priorProp || { key: cur.key, fns: [] };    
+      workProp.fns.push(cur.fn);
+      if (!priorProp) workObj.props.push(workProp);
+      if (!priorObj) acc.push(workObj);
+      return acc;
+    }, [] as ObjectTest [])
+  }
 
   /** Executes tests, mapping to the result. */
   private static executeTestPlan(tests: ValidationInstruction[]): ValidationResult[] {
