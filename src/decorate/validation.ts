@@ -52,11 +52,16 @@ export abstract class Validation {
   public static readonly min: <T extends Number | Date>(
     lBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (lBound) => {
+
+    let typekey: string;
+    if (lBound instanceof Date) typekey = 'date';
+    else if (typeof lBound === 'number') typekey = 'number';
+    else throw new TypeError('Unable to infer type key from: ' + lBound);
+
     return (trg, key) => {
-
-      // TODO: Add typekey to trg, according to lBound type
-
+      Reflect.defineMetadata(`${ValidationKey.TYPE}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(`${ValidationKey.MIN}:${key.toString()}`, key, trg);
+      Reflect.defineMetadata(ValidationKey.TYPE, typekey, trg, key);
       Reflect.defineMetadata(ValidationKey.MIN, lBound, trg, key);
     };
   };
@@ -70,11 +75,16 @@ export abstract class Validation {
   public static readonly max: <T extends Number | Date>(
     uBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (uBound) => {
+
+    let typekey: string;
+    if (uBound instanceof Date) typekey = 'date';
+    else if (typeof uBound === 'number') typekey = 'number';
+    else throw new TypeError('Unable to infer type key from: ' + uBound);
+
     return (trg, key) => {
-
-      // TODO: Add typekey to trg, according to uBound type
-
+      Reflect.defineMetadata(`${ValidationKey.TYPE}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(`${ValidationKey.MAX}:${key.toString()}`, key, trg);
+      Reflect.defineMetadata(ValidationKey.TYPE, typekey, trg, key);
       Reflect.defineMetadata(ValidationKey.MAX, uBound, trg, key);
     };
   };
@@ -90,11 +100,16 @@ export abstract class Validation {
     uBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (lBound, uBound) => {
 
-    // TODO: Add typekey to trg, according to lBound type
+    let typekey: string;
+    if (lBound instanceof Date) typekey = 'date';
+    else if (typeof lBound === 'number') typekey = 'number';
+    else throw new TypeError('Unable to infer type key from: ' + lBound);
 
     return (trg, key) => {
+      Reflect.defineMetadata(`${ValidationKey.TYPE}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(`${ValidationKey.MIN}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(`${ValidationKey.MAX}:${key.toString()}`, key, trg);
+      Reflect.defineMetadata(ValidationKey.TYPE, typekey, trg, key);
       Reflect.defineMetadata(ValidationKey.MIN, lBound, trg, key);
       Reflect.defineMetadata(ValidationKey.MAX, uBound, trg, key);
     };

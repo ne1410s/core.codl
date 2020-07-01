@@ -1,4 +1,4 @@
-import { Validation, Metadata } from '../../../src/index';
+import { Validation, Metadata, Type } from '../../../src/index';
 
 export class ValidationRangeTestModel {
   @Metadata.format((v: Date) => `${v.getDate()}/${v.getMonth() + 1}/${v.getFullYear()}`)
@@ -10,6 +10,9 @@ export class ValidationRangeTestModel {
   @Validation.range(20, 50)
   public myNumber: number = 3;
 
+  @Type.number
+  @Validation.required
+  @Validation.min(-99)
   @Validation.max(2)
   public myNumberMax2 = 2;
 

@@ -1,15 +1,12 @@
 import 'reflect-metadata';
 import { Ctor } from '../../types';
 import { ValidationKey, MetadataKey } from '../../mdkeys';
-import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstruction } from './models';
-import { BooleanValidator } from './types/boolean';
-import { DateValidator } from './types/date';
-import { IntegerValidator } from './types/integer';
-import { NumberValidator } from './types/number';
+import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstruction, Validator } from './models';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
 import { LengthRangeValidator } from './validators/length-range';
+import { TypeValidator } from './validators/type';
 import { CustValidator } from './validators/custom';
 
 /** Reflects validation decoration. */
@@ -24,7 +21,7 @@ export abstract class ReflectValidation {
     if (!proto) throw new TypeError('No type data could be found');
 
     const checks = this.getValidators();
-    const tests = this.buildTestPlan(checks, proto, target);
+    const tests = this.getTestInstructions(checks, proto, target);
     const results = this.executeTestPlan(tests);
     const retVal = this.summarise(results);
 
@@ -58,14 +55,8 @@ export abstract class ReflectValidation {
         return RequiredValidator;
       case ValidationKey.REGEX:
         return RegexValidator;
-      case ValidationKey.TYPE_BOOLEAN:
-        return BooleanValidator;
-      case ValidationKey.TYPE_DATE:
-        return DateValidator;
-      case ValidationKey.TYPE_INTEGER:
-        return IntegerValidator;
-      case ValidationKey.TYPE_NUMBER:
-        return NumberValidator;
+      case ValidationKey.TYPE:
+        return TypeValidator;
       case ValidationKey.CUSTOM:
         return CustValidator;
 
@@ -75,22 +66,31 @@ export abstract class ReflectValidation {
   }
 
   /** Prepares a sequence of validation instructions. */
-  private static buildTestPlan(
+  private static getTestInstructions(
     allChecks: ValidatorDef[],
     proto: any,
     trg: Object,
     pfx: string = ''
   ): ValidationInstruction[] {
+
+    const fnScorer = (ins: ValidationInstruction): number => {
+      return ins.fn === RequiredValidator ? 2
+           : ins.fn === TypeValidator ? 1
+           : 0;
+    }
+
     return Reflect.getMetadataKeys(proto)
       .map((k) => `${k}`)
       .reduce((acc, cur) => {
         const valDef = allChecks.filter((dg) => cur.indexOf(dg.meta + ':') === 0)[0];
         if (valDef) {
           const key = cur.replace(valDef.meta + ':', '');
-          const prior = acc.filter((a) => a.key === key && a.fn === valDef.fn)[0];
           const navkey = pfx ? `${pfx}.${key}` : key;
-          if (prior) prior.tests.push(valDef.test);
-          else
+          const prior = acc.filter((a) => a.navkey === navkey && a.fn === valDef.fn)[0];
+          if (prior) {
+            prior.tests.push(valDef.test);
+          }
+          else {
             acc.push({
               navkey,
               key,
@@ -99,6 +99,7 @@ export abstract class ReflectValidation {
               fn: valDef.fn,
               tests: [valDef.test],
             });
+          }
         } else if (cur.indexOf(`${MetadataKey.MODEL}:`) === 0) {
           const subkey = cur.replace(`${MetadataKey.MODEL}:`, '');
           const subproto = Reflect.getMetadata(cur, proto).prototype;
@@ -107,17 +108,27 @@ export abstract class ReflectValidation {
             subobj.forEach((subitem, i) => {
               const subpfx = pfx ? `${pfx}.${subkey}[${i}]` : `${subkey}[${i}]`;
               acc.push(
-                ...ReflectValidation.buildTestPlan(allChecks, subproto, subitem || {}, subpfx)
+                ...ReflectValidation.getTestInstructions(allChecks, subproto, subitem || {}, subpfx)
               );
             });
           } else if (subobj) {
             const subpfx = pfx ? `${pfx}.${subkey}` : subkey;
-            acc.push(...ReflectValidation.buildTestPlan(allChecks, subproto, subobj, subpfx));
+            acc.push(...ReflectValidation.getTestInstructions(allChecks, subproto, subobj, subpfx));
           }
         }
         return acc;
       }, [] as ValidationInstruction[])
-      .sort((a, b) => a.navkey.split('.').length - b.navkey.split('.').length);
+      .sort((a, b) => { // sort by: depth > key > validator
+        const aNesting = a.navkey.split('.').length;
+        const bNesting = b.navkey.split('.').length;
+        if (aNesting > bNesting) return 1;
+        else if (aNesting < bNesting) return -1;
+        else {
+          if (a.key > b.key) return 1;
+          else if (a.key < b.key) return -1;
+          return fnScorer(b) - fnScorer(a);
+        }
+      });
   }
 
   /** Executes tests, mapping to the result. */

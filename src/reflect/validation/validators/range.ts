@@ -1,5 +1,6 @@
 import { isProvided } from '../../../types';
 import { ValidationKey } from '../../../mdkeys';
+import { ReflectType } from '../../type/type';
 import { ReflectMetadata } from '../../metadata';
 import { Validator, ValidatorOut } from '../models';
 
@@ -9,6 +10,7 @@ export const RangeValidator: Validator = (trg, key, proto) => {
   const retVal: ValidatorOut = { key, value, valid: true };
 
   if (isProvided(value)) {
+
     const min = Reflect.getMetadata(ValidationKey.MIN, proto, key);
     const max = Reflect.getMetadata(ValidationKey.MAX, proto, key);
     const hasMin = isProvided(min);
@@ -21,7 +23,7 @@ export const RangeValidator: Validator = (trg, key, proto) => {
       const name = ReflectMetadata.getDisplayName(proto, key);
       const fmtMin = hasMin ? ReflectMetadata.getFormatted(proto, key, min) : min;
       const fmtMax = hasMax ? ReflectMetadata.getFormatted(proto, key, max) : max;
-      const isDate = tests[0] instanceof Date;
+      const isDate = ReflectType.getType(proto, key) === 'date';
       const compareLT = isDate ? 'before' : 'less than';
       const compareGT = isDate ? 'after' : 'greater than';
       const rangeImperative = isArray ? 'have all values' : 'be';

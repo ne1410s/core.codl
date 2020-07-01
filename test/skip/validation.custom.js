@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
+const ne_codl = require('../../dist/ne14_codl.umd.min.js.test');
 
 describe('@Validation.custom', () => {
   it('generic, formatted error message', () => {
