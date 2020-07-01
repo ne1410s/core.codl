@@ -131,6 +131,31 @@ export abstract class ReflectValidation {
       });
   }
 
+  // TODO: 'prepareTestPlan': ValInstr[] --> TestPlan
+  /*
+
+
+[
+  {
+    trg: {},
+    proto: {},
+    props: [
+      { key, navkey, fns: [] },  <-- for each fn, if fails & is terminal, the tests are no longer conducted for the key
+      { key, navkey, fns: [] }
+    ]
+  },  
+  {
+    trg: {},
+    proto: {},
+    props: [
+      { key, navkey, fns: [] }
+    ]
+  },
+]
+
+
+  */
+
   /** Executes tests, mapping to the result. */
   private static executeTestPlan(tests: ValidationInstruction[]): ValidationResult[] {
     return tests.map((t) => {
