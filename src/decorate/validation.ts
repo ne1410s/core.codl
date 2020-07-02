@@ -14,6 +14,15 @@ export abstract class Validation {
   };
 
   /**
+   * Makes a property forbidden. 'Unprovided' values (null, undefined, '') are
+   * valid. Anything else is considered invalid (including: 0, 0n, false).
+   */
+  public static readonly forbidden: PropertyDecorator = (trg, key) => {
+    Reflect.defineMetadata(`${ValidationKey.FORBIDDEN}:${key.toString()}`, key, trg);
+    Reflect.defineMetadata(ValidationKey.FORBIDDEN, true, trg, key);
+  };
+
+  /**
    * Associates a string or array with a minimum length. 'Unprovided' values
    * (null, undefined, '') are not tested hence valid. Otherwise the string
    * length must not be less than the bound supplied.
@@ -122,6 +131,21 @@ export abstract class Validation {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.REGEX}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.REGEX, regex, trg, key);
+    };
+  };
+
+  /**
+   * Associates a property with a predefined set of allowed values.
+   * 
+   * TODO: Types!!!
+   * 
+   */
+  public static readonly options: <T extends boolean | number | string>(
+    ...opts: any[]
+  ) => TypedPropertyDecorator<T | ArrayLike<T>> = (opts) => {
+    return (trg, key) => {
+      Reflect.defineMetadata(`${ValidationKey.OPTIONS}:${key.toString()}`, key, trg);
+      Reflect.defineMetadata(ValidationKey.OPTIONS, opts, trg, key);
     };
   };
 

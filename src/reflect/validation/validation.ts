@@ -6,7 +6,6 @@ import {
   ValidationResult,
   ValidatorDef,
   ValidationInstruction,
-  Validator,
   ObjectTest,
   PropertyTest,
 } from './models';
@@ -16,6 +15,8 @@ import { RangeValidator } from './validators/range';
 import { LengthRangeValidator } from './validators/length-range';
 import { TypeValidator } from './validators/type';
 import { CustValidator } from './validators/custom';
+import { ForbiddenValidator } from './validators/forbidden';
+import { OptionsValidator } from './validators/options';
 
 /** Reflects validation decoration. */
 export abstract class ReflectValidation {
@@ -52,9 +53,15 @@ export abstract class ReflectValidation {
   /** Gets the validator function for a given key. */
   private static getValidator(key: string) {
     switch (key) {
+      case ValidationKey.FORBIDDEN:
+        return ForbiddenValidator;
+
       case ValidationKey.MIN_LENGTH:
       case ValidationKey.MAX_LENGTH:
         return LengthRangeValidator;
+
+      case ValidationKey.OPTIONS:
+        return OptionsValidator;
 
       case ValidationKey.MIN:
       case ValidationKey.MAX:
@@ -82,7 +89,10 @@ export abstract class ReflectValidation {
     pfx: string = ''
   ): ValidationInstruction[] {
     const fnScorer = (ins: ValidationInstruction): number => {
-      return ins.fn === RequiredValidator ? 2 : ins.fn === TypeValidator ? 1 : 0;
+      return ins.fn === RequiredValidator ? 3 
+      : ins.fn === ForbiddenValidator ? 2
+      : ins.fn === TypeValidator ? 1
+      : 0;
     };
 
     return Reflect.getMetadataKeys(proto)
@@ -165,7 +175,9 @@ export abstract class ReflectValidation {
         for (let i = 0; i < p.fns.length; i++) {
           const output = p.fns[i](cur.trg, p.key, cur.proto);
           acc.push({ ...output, navkey: p.navkey });
-          if (!output.valid && (p.fns[i] === RequiredValidator || p.fns[i] === TypeValidator)) {
+          if (!output.valid && (p.fns[i] === RequiredValidator
+            || p.fns[i] === ForbiddenValidator
+            || p.fns[i] === TypeValidator)) {
             break; // stop if we've failed a terminating test
           }
         }
