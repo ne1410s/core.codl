@@ -9,5 +9,5 @@ export default {
     { file: pkg.main, format: 'cjs' },
     { file: pkg.module, format: 'es' },
   ],
-  plugins: [typescript()],
+  plugins: [typescript({ include: ['src/**/*.ts'] })],
 };

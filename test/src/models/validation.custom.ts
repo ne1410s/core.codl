@@ -11,4 +11,8 @@ export class ValidationCustomTestModel {
     }
   })
   public myNumber: number;
+
+  @Validation.min(3)
+  @Validation.custom((v) => (v === 3.5 ? 'anything but THAT' : null))
+  public myOptionalNumber?: number;
 }

@@ -10,5 +10,5 @@ export default {
     file: pkg.browser,
     format: 'umd',
   },
-  plugins: [typescript()],
+  plugins: [typescript({ include: ['src/**/*.ts'] })],
 };

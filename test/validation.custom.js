@@ -25,7 +25,20 @@ describe('@Validation.custom', () => {
   it('passes validation', () => {
     const sut = new ne_codl.ValidationCustomTestModel();
     delete sut.myString;
+    sut.myOptionalNumber = 3;
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.true;
+  });
+
+  it('optional property -> custom invalid', () => {
+    const sut = new ne_codl.ValidationCustomTestModel();
+    delete sut.myString;
+    sut.myOptionalNumber = 3.5;
+    let summary = ne_codl.ReflectValidation.validate(sut);
+    expect(summary.valid).to.be.false;
+    const optErrs = summary.errors['myOptionalNumber'];
+    expect(optErrs).to.not.be.undefined;
+    expect(optErrs.length).to.equal(1);
+    expect(optErrs[0]).to.equal('anything but THAT');
   });
 });
