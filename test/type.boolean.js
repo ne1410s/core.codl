@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const ne_codl = require('../../dist/ne14_codl.umd.min.js.test');
+const ne_codl = require('../dist/ne14_codl.umd.min.js.test');
 
 describe('@Type.boolean', () => {
   it('from boolean -> valid', () => {
@@ -8,7 +8,7 @@ describe('@Type.boolean', () => {
     let summary = ne_codl.ReflectValidation.validate(sut);
     expect(summary.valid).to.be.true;
   });
-  
+
   it('from number -> valid', () => {
     const sut = new ne_codl.TypeBooleanTestModel();
     sut.myBoolean = 0;

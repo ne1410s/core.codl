@@ -9,10 +9,10 @@ describe('@Validation (nested)', () => {
     expect(summary.valid).to.be.false;
   });
 
-  // it('type data supplied separately', () => {
-  //   const type = ne_codl.ValidationNestingParentModel;
-  //   const test = { num: 77 };
-  //   let summary = ne_codl.ReflectValidation.validate(test, type);
-  //   expect(summary.valid).to.be.false;
-  // });
+  it('type data supplied separately', () => {
+    const type = ne_codl.ValidationNestingParentModel;
+    const test = { num: 77 };
+    let summary = ne_codl.ReflectValidation.validate(test, type);
+    expect(summary.valid).to.be.false;
+  });
 });

@@ -8,7 +8,6 @@ import { IntegerParser } from './parsers/integer';
 import { NumberParser } from './parsers/number';
 
 export abstract class ReflectType {
-
   /**
    * Parses provided according to its meta type. If no type found, the original
    * value is returned, otherwise a value is only returned in parseable cases.
@@ -32,11 +31,16 @@ export abstract class ReflectType {
   /** Gets parser for supported meta types. */
   public static getParser(type: string): Parser<any> {
     switch (type) {
-      case 'boolean': return BooleanParser;
-      case 'date': return DateParser;
-      case 'integer': return IntegerParser;
-      case 'number': return NumberParser;
-      default: throw new RangeError(`No parser implemented for ${type}`);
+      case 'boolean':
+        return BooleanParser;
+      case 'date':
+        return DateParser;
+      case 'integer':
+        return IntegerParser;
+      case 'number':
+        return NumberParser;
+      default:
+        throw new RangeError(`No parser implemented for ${type}`);
     }
   }
 }

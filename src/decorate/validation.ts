@@ -52,7 +52,6 @@ export abstract class Validation {
   public static readonly min: <T extends Number | Date>(
     lBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (lBound) => {
-
     let typekey: string;
     if (lBound instanceof Date) typekey = 'date';
     else if (typeof lBound === 'number') typekey = 'number';
@@ -75,7 +74,6 @@ export abstract class Validation {
   public static readonly max: <T extends Number | Date>(
     uBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (uBound) => {
-
     let typekey: string;
     if (uBound instanceof Date) typekey = 'date';
     else if (typeof uBound === 'number') typekey = 'number';
@@ -99,7 +97,6 @@ export abstract class Validation {
     lBound: T,
     uBound: T
   ) => TypedPropertyDecorator<T | ArrayLike<T>> = (lBound, uBound) => {
-
     let typekey: string;
     if (lBound instanceof Date) typekey = 'date';
     else if (typeof lBound === 'number') typekey = 'number';

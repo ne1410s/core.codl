@@ -1,7 +1,15 @@
 import 'reflect-metadata';
 import { Ctor } from '../../types';
 import { ValidationKey, MetadataKey } from '../../mdkeys';
-import { ValidationSummary, ValidationResult, ValidatorDef, ValidationInstruction, Validator, ObjectTest, PropertyTest } from './models';
+import {
+  ValidationSummary,
+  ValidationResult,
+  ValidatorDef,
+  ValidationInstruction,
+  Validator,
+  ObjectTest,
+  PropertyTest,
+} from './models';
 import { RequiredValidator } from './validators/required';
 import { RegexValidator } from './validators/regex';
 import { RangeValidator } from './validators/range';
@@ -23,11 +31,7 @@ export abstract class ReflectValidation {
     const checks = this.getValidators();
     const rawTests = this.getTestInstructions(checks, proto, target);
     const testPlan = this.prepareTestPlan(rawTests);
-    
-    // TODO: pass test plan to the below method
-    // (and refactoring it to bail out of 'terminal' tests that fail)
-
-    const results = this.executeTestPlan(rawTests);
+    const results = this.executeTestPlan(testPlan);
     const retVal = this.summarise(results);
 
     return retVal;
@@ -77,12 +81,9 @@ export abstract class ReflectValidation {
     trg: Object,
     pfx: string = ''
   ): ValidationInstruction[] {
-
     const fnScorer = (ins: ValidationInstruction): number => {
-      return ins.fn === RequiredValidator ? 2
-           : ins.fn === TypeValidator ? 1
-           : 0;
-    }
+      return ins.fn === RequiredValidator ? 2 : ins.fn === TypeValidator ? 1 : 0;
+    };
 
     return Reflect.getMetadataKeys(proto)
       .map((k) => `${k}`)
@@ -94,8 +95,7 @@ export abstract class ReflectValidation {
           const prior = acc.filter((a) => a.navkey === navkey && a.fn === valDef.fn)[0];
           if (prior) {
             prior.tests.push(valDef.test);
-          }
-          else {
+          } else {
             acc.push({
               navkey,
               key,
@@ -123,7 +123,8 @@ export abstract class ReflectValidation {
         }
         return acc;
       }, [] as ValidationInstruction[])
-      .sort((a, b) => { // sort by: depth > objname > keyname > validator
+      .sort((a, b) => {
+        // sort by: depth > objname > keyname > validator
         const aNesting = a.navkey.split('.').length;
         const bNesting = b.navkey.split('.').length;
         if (aNesting > bNesting) return 1;
@@ -141,25 +142,36 @@ export abstract class ReflectValidation {
     return instr.reduce((acc, cur) => {
       const lastDot = cur.navkey.lastIndexOf('.');
       const objKey = lastDot === -1 ? '' : cur.navkey.substring(0, lastDot);
-      const priorObj = acc.filter(a => a.navkey === objKey)[0];
-      const workObj: ObjectTest = priorObj || { 
-        navkey: objKey, proto: cur.proto, trg: cur.trg, props: []
+      const priorObj = acc.filter((a) => a.navkey === objKey)[0];
+      const workObj: ObjectTest = priorObj || {
+        navkey: objKey,
+        proto: cur.proto,
+        trg: cur.trg,
+        props: [],
       };
-      const priorProp = workObj.props.filter(p => p.key === cur.key)[0];
-      const workProp: PropertyTest = priorProp || { key: cur.key, fns: [] };    
+      const priorProp = workObj.props.filter((p) => p.key === cur.key)[0];
+      const workProp: PropertyTest = priorProp || { key: cur.key, navkey: cur.navkey, fns: [] };
       workProp.fns.push(cur.fn);
       if (!priorProp) workObj.props.push(workProp);
       if (!priorObj) acc.push(workObj);
       return acc;
-    }, [] as ObjectTest [])
+    }, [] as ObjectTest[]);
   }
 
-  /** Executes tests, mapping to the result. */
-  private static executeTestPlan(tests: ValidationInstruction[]): ValidationResult[] {
-    return tests.map((t) => {
-      const output = t.fn(t.trg, t.key, t.proto);
-      return { navkey: t.navkey, tests: t.tests, ...output };
-    });
+  /** Executes test plan, mapping to a result. */
+  private static executeTestPlan(tests: ObjectTest[]): ValidationResult[] {
+    return tests.reduce((acc, cur) => {
+      cur.props.forEach((p) => {
+        for (let i = 0; i < p.fns.length; i++) {
+          const output = p.fns[i](cur.trg, p.key, cur.proto);
+          acc.push({ ...output, navkey: p.navkey });
+          if (!output.valid && (p.fns[i] === RequiredValidator || p.fns[i] === TypeValidator)) {
+            break; // stop if we've failed a terminating test
+          }
+        }
+      });
+      return acc;
+    }, [] as ValidationResult[]);
   }
 
   /** Summarises a sequence of results. */

@@ -1,7 +1,6 @@
 import { Metadata, Type, Validation } from '../../../src/index';
 
 export class TypeBooleanTestModel {
-
   @Metadata.displayName('My Bool')
   @Validation.required
   @Type.boolean

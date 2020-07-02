@@ -9,7 +9,6 @@ export const TypeValidator: Validator = (trg, key, proto) => {
   const retVal: ValidatorOut = { key, value, valid: true };
 
   if (isProvided(value)) {
-
     const type = ReflectType.getType(proto, key);
     const parser = ReflectType.getParser(type);
 
@@ -19,7 +18,9 @@ export const TypeValidator: Validator = (trg, key, proto) => {
 
     if (!allOk) {
       const name = ReflectMetadata.getDisplayName(proto, key);
-      retVal.message = isArray ? `${name} contains an invalid ${type}` : `${name} is not a valid ${type}`;
+      retVal.message = isArray
+        ? `${name} contains an invalid ${type}`
+        : `${name} is not a valid ${type}`;
     }
   }
 

@@ -10,7 +10,6 @@ export const RangeValidator: Validator = (trg, key, proto) => {
   const retVal: ValidatorOut = { key, value, valid: true };
 
   if (isProvided(value)) {
-
     const min = Reflect.getMetadata(ValidationKey.MIN, proto, key);
     const max = Reflect.getMetadata(ValidationKey.MAX, proto, key);
     const hasMin = isProvided(min);

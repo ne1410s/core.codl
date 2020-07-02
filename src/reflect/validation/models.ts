@@ -24,6 +24,7 @@ export interface ObjectTest {
 
 export interface PropertyTest {
   key: string;
+  navkey: string;
   fns: Validator[];
 }
 

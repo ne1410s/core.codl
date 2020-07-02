@@ -6,4 +6,4 @@ export const DateParser: Parser<Date> = (obj) => {
     const test = new Date(obj);
     if (!isNaN(test.getTime())) return test;
   }
-}
+};
