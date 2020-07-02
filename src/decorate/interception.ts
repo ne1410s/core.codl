@@ -1,4 +1,4 @@
-import { Ctor, FunctionDecorator, TypedPropertyDecorator } from './src/types';
+import { Ctor, FunctionDecorator, TypedPropertyDecorator } from '../types';
 
 export abstract class Interception {
   /**
