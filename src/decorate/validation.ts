@@ -135,14 +135,12 @@ export abstract class Validation {
   };
 
   /**
-   * Associates a property with a predefined set of allowed values.
-   * 
-   * TODO: Types!!!
-   * 
+   * Associates a property with a predefined set of allowed values. Primitive
+   * types, enums and arrays thereof are all supported.
    */
-  public static readonly options: <T extends boolean | number | string>(
-    ...opts: any[]
-  ) => TypedPropertyDecorator<T | ArrayLike<T>> = (opts) => {
+  public static readonly options: <T extends String | Number | Boolean>(
+    ...opts: T[]
+  ) => TypedPropertyDecorator<T | ArrayLike<T>> = (...opts) => {
     return (trg, key) => {
       Reflect.defineMetadata(`${ValidationKey.OPTIONS}:${key.toString()}`, key, trg);
       Reflect.defineMetadata(ValidationKey.OPTIONS, opts, trg, key);

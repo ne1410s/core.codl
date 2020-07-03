@@ -10,7 +10,7 @@ export * from './models/type.integer';
 export * from './models/type.number';
 
 export * from './models/validation.custom';
-export * from './models/validation.forbidden'
+export * from './models/validation.forbidden';
 export * from './models/validation.nested';
 export * from './models/validation.options';
 export * from './models/validation.range';

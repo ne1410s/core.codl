@@ -89,10 +89,13 @@ export abstract class ReflectValidation {
     pfx: string = ''
   ): ValidationInstruction[] {
     const fnScorer = (ins: ValidationInstruction): number => {
-      return ins.fn === RequiredValidator ? 3 
-      : ins.fn === ForbiddenValidator ? 2
-      : ins.fn === TypeValidator ? 1
-      : 0;
+      return ins.fn === RequiredValidator
+        ? 3
+        : ins.fn === ForbiddenValidator
+        ? 2
+        : ins.fn === TypeValidator
+        ? 1
+        : 0;
     };
 
     return Reflect.getMetadataKeys(proto)
@@ -175,9 +178,12 @@ export abstract class ReflectValidation {
         for (let i = 0; i < p.fns.length; i++) {
           const output = p.fns[i](cur.trg, p.key, cur.proto);
           acc.push({ ...output, navkey: p.navkey });
-          if (!output.valid && (p.fns[i] === RequiredValidator
-            || p.fns[i] === ForbiddenValidator
-            || p.fns[i] === TypeValidator)) {
+          if (
+            !output.valid &&
+            (p.fns[i] === RequiredValidator ||
+              p.fns[i] === ForbiddenValidator ||
+              p.fns[i] === TypeValidator)
+          ) {
             break; // stop if we've failed a terminating test
           }
         }
