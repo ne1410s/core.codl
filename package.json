@@ -1,6 +1,6 @@
 {
   "name": "@ne1410s/codl",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Indulge your apps with codl: a component model library",
   "main": "dist/ne14_codl.cjs.min.js",
   "module": "dist/ne14_codl.esm.min.js",
