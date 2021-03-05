@@ -37,13 +37,13 @@
   },
   "homepage": "https://github.com/ne1410s/core.codl#readme",
   "devDependencies": {
-    "chai": "^4.3.0",
+    "chai": "^4.3.3",
     "mocha": "^8.3.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.39.0",
+    "rollup": "^2.40.0",
     "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.1.5"
+    "typescript": "^4.2.3"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
